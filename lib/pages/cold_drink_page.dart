@@ -15,9 +15,12 @@ class ColdDrink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var scaffoldKey = GlobalKey<ScaffoldState>();
+
     return BlocConsumer<cubit,States>(
       builder: (context,state){
         return  Scaffold(
+          key: scaffoldKey,
           appBar: AppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
@@ -36,7 +39,7 @@ class ColdDrink extends StatelessWidget {
           body: Row(
             children: [
               LeftPage(context , allItems: false),
-              CenterPage(context,allItem: false),
+              CenterPage(context,allItem: false , scaffoldKey: scaffoldKey),
               RightPage(context),
             ],
           ),

@@ -14,8 +14,8 @@ class AddItem extends StatefulWidget {
 }
 
 TextEditingController itemIDController = TextEditingController();
-TextEditingController itemnameController = TextEditingController();
-TextEditingController itempriceController = TextEditingController();
+TextEditingController itemNameController = TextEditingController();
+TextEditingController itemPriceController = TextEditingController();
 bool foodValue = false ;
 bool dessertValue = false ;
 bool coldDrinkValue = false ;
@@ -36,14 +36,14 @@ class _AddItemState extends State<AddItem> {
         automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: (){
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const HomePage()), (route) => false);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios_new
             ),
           ),
           elevation: 0,
-          title: Text("Add Item"),
+          title: const Text("Add Item"),
           backgroundColor: HexColor('#549AAB')),
       body: Row(
         children: [
@@ -64,12 +64,12 @@ class _AddItemState extends State<AddItem> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         "item ID",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       textField(
@@ -78,49 +78,49 @@ class _AddItemState extends State<AddItem> {
                           controller: itemIDController,
                           type: TextInputType.number,
                           raduis: 10),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "item Name",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       textField(
                           text: "Type item name",
                           prefixIcon: Icons.add,
-                          controller: itemnameController,
+                          controller: itemNameController,
                           type: TextInputType.number,
                           raduis: 10),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "item price",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       textField(
                           text: "Type item price",
                           prefixIcon: Icons.add,
-                          controller: itempriceController,
+                          controller: itemPriceController,
                           type: TextInputType.number,
                           raduis: 10),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Text(
+                      const Text(
                         "item ID",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 17),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Container(
@@ -133,6 +133,12 @@ class _AddItemState extends State<AddItem> {
                               child: checkBoxItem(function: (value){
                                 setState(() {
                                   foodValue = value!;
+                                  if(foodValue)
+                                  {
+                                    coldDrinkValue = false ;
+                                    hotDrinkValue = false ;
+                                    dessertValue = false ;
+                                  }
                                 });
                               }, text: "Food", value: foodValue),
                             ),
@@ -140,6 +146,12 @@ class _AddItemState extends State<AddItem> {
                               child: checkBoxItem(function: (value){
                                 setState(() {
                                   dessertValue = value!;
+                                  if(dessertValue)
+                                  {
+                                    coldDrinkValue = false ;
+                                    hotDrinkValue = false ;
+                                    foodValue = false ;
+                                  }
                                 });
                               }, text: "Dessert", value: dessertValue),
                             ),
@@ -147,6 +159,12 @@ class _AddItemState extends State<AddItem> {
                               child: checkBoxItem(function: (value){
                                 setState(() {
                                   coldDrinkValue = value!;
+                                  if(coldDrinkValue)
+                                  {
+                                    hotDrinkValue = false ;
+                                    dessertValue = false ;
+                                    foodValue = false ;
+                                  }
                                 });
                               }, text: "Cold Drinks", value: coldDrinkValue),
                             ),
@@ -154,6 +172,12 @@ class _AddItemState extends State<AddItem> {
                               child: checkBoxItem(function: (value){
                                 setState(() {
                                   hotDrinkValue = value!;
+                                  if(hotDrinkValue)
+                                    {
+                                      coldDrinkValue = false ;
+                                      dessertValue = false ;
+                                      foodValue = false ;
+                                    }
                                 });
                               }, text: "Hot Drinks", value: hotDrinkValue),
                             ),
@@ -161,7 +185,7 @@ class _AddItemState extends State<AddItem> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20,),
+                      const SizedBox(height: 20,),
                       Center(
                         child: button(
                             context: context,

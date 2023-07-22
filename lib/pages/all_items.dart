@@ -13,9 +13,12 @@ class AllItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var scaffoldKey = GlobalKey<ScaffoldState>();
+
     return BlocConsumer<cubit,States>(
       builder: (context,state){
         return  Scaffold(
+          key: scaffoldKey,
           appBar: AppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
@@ -34,7 +37,7 @@ class AllItems extends StatelessWidget {
           body: Row(
             children: [
               LeftPage(context , allItems: true),
-              CenterPage(context,allItem: true),
+              CenterPage(context,allItem: true , scaffoldKey:scaffoldKey  ),
 
             ],
           ),

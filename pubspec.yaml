@@ -40,7 +40,10 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   hexcolor: ^2.0.7
   sqflite: ^2.2.8+4
+  sqflite_common_ffi:
+  fluttertoast: ^8.0.9
   conditional_builder_null_safety: ^0.0.6
+  gsheets: ^0.4.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

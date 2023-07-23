@@ -26,22 +26,11 @@ class cubit extends Cubit<States> {
     Icons.water_drop_outlined,
     Icons.message
   ];
-  List<String> orders = [
-    "Original Burger",
-    "Ranch Burger",
-    "Orange",
-    "Apple",
-    "Chicken",
-    "Original Burger",
-    "Ranch Burger",
-    "Orange",
-    "Apple",
-    "Chicken"
-  ];
-
-  List<int> quantity = [1, 2, 4, 5, 10, 1, 2, 4, 5, 10];
-
-  List<double> cost = [33.5, 100, 50.4, 200, 185, 33.5, 100, 50.4, 200, 185];
+  List<dynamic> orders = [];
+  List<dynamic> food = [];
+  List<dynamic> dessert = [];
+  List<dynamic> coldDrinks = [];
+  List<dynamic> hotDrinks = [];
 
   double total = 0;
 
@@ -80,9 +69,207 @@ class cubit extends Cubit<States> {
     emit(RemoveBillItem());
   }
 
-
   void enterQuantity(
       {required TextEditingController controller, required String number}) {
     controller.text = controller.text + number;
+  }
+
+  /*
+                                              DATABASE
+   */
+
+  String dbName = "Cashier";
+  String userTable = "Users";
+  String itemTable = "Items";
+  int versionCode = 1;
+
+  Database? db;
+
+  void createDb() async {
+    emit(LoadingCreateDataBase());
+    await openDatabase(dbName, version: versionCode,
+        onCreate: (database, version) {
+      database
+          .execute(
+              "create table $userTable (id integer primary key , name text , password text , email text ) ;"
+              " create table $itemTable (id integer primary key , label text , category text , price double )")
+          .then((value) {
+        print("create data success");
+      }).catchError((error) {
+        print("fail");
+        print(error.toString());
+      });
+    }, onOpen: (database) {
+      print("database opend successfully");
+    }).then((value) {
+      db = value;
+      emit(SuccessfullyCreateDataBase());
+    }).catchError((error) {
+      print("Can't open data");
+      print(error.toString());
+      emit(ErrorCreateDataBase());
+    });
+  }
+
+  void insertUserData(
+      {required String name,
+      required String email,
+      required String password}) async {
+    emit(LoadingInsertUserData());
+    await db!.transaction((txn) async {
+      await txn
+          .rawInsert(
+              "insert into $userTable (name , password , email ) values ('$name' ,  '$password' , '$email')")
+          .then((value) {
+        print("insert success");
+        emit(SuccessfullyInsertUserData());
+      }).catchError((error) {
+        print("insert error");
+        print(error.toString());
+        emit(ErrorInsertUserData());
+      });
+    });
+  }
+
+  void insertItemData(
+      {required String label,
+      required String category,
+      required double price}) async {
+    emit(LoadingInsertItemData());
+    await db!.transaction((txn) async {
+      await txn
+          .rawInsert(
+              "insert into $itemTable (label , category , price ) values ('$label' ,  '$category' , '$price')")
+          .then((value) {
+        print("insert success");
+        emit(LoadingInsertItemData());
+      }).catchError((error) {
+        print("insert error");
+        print(error.toString());
+        emit(LoadingInsertItemData());
+      });
+    });
+  }
+
+  void getUserData() {
+    emit(LoadingGetUserData());
+    db?.rawQuery("SELECT * FROM $userTable").then((value) {
+      print(value);
+      emit(SuccessfullyGetUserData());
+    }).catchError((error) {
+      print("Error in getData");
+      print(error.toString());
+      emit(ErrorGetUserData());
+    });
+  }
+
+  void getItemData() {
+    emit(LoadingGetItemData());
+    db?.rawQuery("SELECT * FROM $itemTable").then((value) {
+      // print(value[0]["id"]);
+      value.forEach((element) {
+        orders.add(element);
+        if(element["category"]=="food")
+          {
+            food.add(element);
+          }else if(element["category"]=="dessert")
+        {
+          dessert.add(element);
+        }else if(element["category"]=="hot drink")
+        {
+          hotDrinks.add(element);
+        }else if(element["category"]==" cold drink")
+        {
+          coldDrinks.add(element);
+        }
+      });
+      // print(orders[0][0]);
+      print(orders[0]['id']);
+      emit(SuccessfullyGetItemData());
+    }).catchError((error) {
+      print("Error in getData");
+      print(error.toString());
+      emit(ErrorGetItemData());
+    });
+  }
+
+  void updateItemData({
+    required int id,
+    required int price,
+    required int name,
+    required int category,
+  }) async {
+    emit(LoadingUpdateItemData());
+
+    db?.rawUpdate(
+      'UPDATE $itemTable SET name = ? , price = ? , category=? WHERE id = ?',
+      ['$name', '$price', '$category', id],
+    ).then((value) {
+      emit(SuccessfullyUpdateItemData());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorUpdateItemData());
+    });
+  }
+
+  void updateUserData({
+    required int id,
+    required int email,
+    required int name,
+    required int password,
+  }) async {
+    emit(LoadingUpdateUserData());
+
+    db?.rawUpdate(
+      'UPDATE $userTable SET name = ? , email = ? , password=? WHERE id = ?',
+      ['$name', '$email', '$password', id],
+    ).then((value) {
+      emit(SuccessfullyUpdateUserData());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorUpdateUserData());
+    });
+  }
+
+  void deleteItemData({
+    required int id,
+  }) async {
+    emit(LoadingDeleteItemData());
+    db?.rawUpdate(
+      'DELETE FROM $itemTable  WHERE id = ?',
+      [id],
+    ).then((value) {
+      emit(SuccessfullyDeleteItemData());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorDeleteItemData());
+    });
+  }
+
+  void deleteUserData({
+    required int id,
+  }) async {
+    emit(LoadingDeleteUserData());
+    db?.rawUpdate(
+      'DELETE FROM $userTable  WHERE id = ?',
+      [id],
+    ).then((value) {
+      emit(SuccessfullyDeleteUserData());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorDeleteUserData());
+    });
+  }
+
+  void login({required String email, required String password}) {
+    emit(LoadingLogin());
+
+    db?.rawQuery("SELECT * FROM $userTable WHERE password = ? AND email = ? ",
+        [password, email]).then((value) {
+      value.isEmpty ? emit(ErrorLogin()) : emit(SuccessfullyLogin());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorLogin());
+    });
   }
 }

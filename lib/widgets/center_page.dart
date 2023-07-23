@@ -81,9 +81,9 @@ Widget CenterPage(
                     onTap: () {
                       if (!allItem) {
                         cubit.get(context).addBill(list: [
-                          cubit.get(context).orders[index],
+                          cubit.get(context).orders[index]['label'],
                           1,
-                          cubit.get(context).cost[index]
+                          cubit.get(context).orders[index]["price"]
                         ]);
                       }
                     },
@@ -118,7 +118,7 @@ Widget CenterPage(
                                           width: 10,
                                         ),
                                         Text(
-                                          cubit.get(context).orders[index],
+                                          cubit.get(context).orders[index]['label'],
                                           style: TextStyle(
                                             color: Colors.green,
                                             fontSize: 17,
@@ -170,7 +170,7 @@ Widget CenterPage(
                                           width: 10,
                                         ),
                                         Text(
-                                          " ${cubit.get(context).cost[index]}",
+                                          " ${cubit.get(context).orders[index]["price"]}",
                                           style: TextStyle(
                                             color: Colors.green,
                                             fontSize: 17,
@@ -258,12 +258,12 @@ Widget CenterPage(
                                                       .addBill(list: [
                                                     cubit
                                                         .get(context)
-                                                        .orders[index],
+                                                        .orders[index]["label"],
                                                     controller.text,
                                                     (int.parse(controller.text) *
                                                         cubit
                                                             .get(context)
-                                                            .cost[index])
+                                                            .orders[index]["price"])
                                                   ]);
                                                 }
                                               })
@@ -280,10 +280,10 @@ Widget CenterPage(
                     },
                     child: Row(
                       children: [
-                        Expanded(child: text(text: 'Id', color: Colors.black)),
-                        Expanded(child: text(text: 'Id', color: Colors.black)),
-                        Expanded(child: text(text: 'Id', color: Colors.black)),
-                        Expanded(child: text(text: 'Id', color: Colors.black)),
+                        Expanded(child: text(text: cubit.get(context).orders[index]["id"].toString(), color: Colors.black)),
+                        Expanded(child: text(text: cubit.get(context).orders[index]["label"], color: Colors.black)),
+                        Expanded(child: text(text: cubit.get(context).orders[index]["category"], color: Colors.black)),
+                        Expanded(child: text(text: cubit.get(context).orders[index]["price"].toString(), color: Colors.black)),
                         if (allItem)
                           Expanded(
                             child: IconButton(
@@ -312,7 +312,7 @@ Widget CenterPage(
                   color: Colors.black,
                 );
               },
-              itemCount: 50,
+              itemCount: cubit.get(context).orders.length,
             ),
           ),
         ),

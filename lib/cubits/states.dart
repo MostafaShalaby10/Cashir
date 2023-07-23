@@ -47,3 +47,8 @@ class ErrorDeleteUserData extends States{}
 class LoadingLogin extends States{}
 class SuccessfullyLogin extends States{}
 class ErrorLogin extends States{}
+
+class ErrorSearchById extends States{}
+class ErrorSearchByName extends States{}
+class SuccessfullySearchByName extends States{}
+class SuccessfullySearchById extends States{}

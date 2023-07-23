@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lastcashir/cubits/cubit.dart';
+import 'package:lastcashir/widgets/center_page.dart';
 
 Widget button(
     {required context,
@@ -41,7 +42,7 @@ Widget calculatorNumber(context,
   );
 }
 
-Widget textField({
+Widget textField(context , {
   required String text,
   required IconData prefixIcon,
   required TextEditingController controller,
@@ -49,9 +50,11 @@ Widget textField({
   required TextInputType type,
   IconData? suffixIcon,
   Function()? function,
+  Function(String?)? onChangedFunction,
   double raduis = 25,
 }) {
   return TextFormField(
+    onChanged:onChangedFunction ,
     validator: (value) {
       if (value!.isEmpty) {
         return "$text can't be empty";

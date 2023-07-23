@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/pages/add_item_page.dart';
 import 'package:lastcashir/pages/update_page.dart';
+import 'package:lastcashir/widgets/mahmoud.dart';
 
 import '../components/custom_button.dart';
 import '../pages/all_items.dart';
@@ -15,6 +16,7 @@ Widget CenterPage(
   context, {
   required bool allItem,
   required GlobalKey<ScaffoldState> scaffoldKey,
+      required List<dynamic>list,
 }) {
   TextEditingController controller = TextEditingController();
   TextEditingController searchByID = TextEditingController();
@@ -25,32 +27,7 @@ Widget CenterPage(
     flex: 6,
     child: Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20, right: 20, left: 20),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: textField(
-                    text: 'Search by Id',
-                    prefixIcon: Icons.search,
-                    controller: searchByID,
-                    type: TextInputType.number),
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                flex: 3,
-                child: textField(
-                    text: 'Search by name',
-                    prefixIcon: Icons.search,
-                    controller: searchByName,
-                    type: TextInputType.name),
-              ),
-            ],
-          ),
-        ),
+
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(
@@ -81,28 +58,30 @@ Widget CenterPage(
                     onTap: () {
                       if (!allItem) {
                         cubit.get(context).addBill(list: [
-                          cubit.get(context).orders[index]['label'],
+                         list[index]['label'],
                           1,
-                          cubit.get(context).orders[index]["price"]
+                         list[index]["price"]
                         ]);
                       }
                     },
                     onDoubleTap: () {
                       if (!allItem) {
                         scaffoldKey.currentState!.showBottomSheet((context) {
-                          return Center(
-                            child: Container(
-                              width: MediaQuery.of(context).size.width ,
-                              height: MediaQuery.of(context).size.height / 2,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(25) ,
-                                border: Border.all(color: Colors.black)
-                              ),
-                              ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                              child: Form(
-                                key: formKey,
+                          return Container(
+                            width: MediaQuery.of(context).size.width/2 ,
+                            height: MediaQuery.of(context).size.height / 2,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5) ,
+                              border: Border.all(color: Colors.black)
+                            ),
+                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                            child: Form(
+                              key: formKey,
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     ////////////////////////
                                     Row(
@@ -118,7 +97,7 @@ Widget CenterPage(
                                           width: 10,
                                         ),
                                         Text(
-                                          cubit.get(context).orders[index]['label'],
+                                          list[index]['label'],
                                           style: TextStyle(
                                             color: Colors.green,
                                             fontSize: 17,
@@ -143,6 +122,7 @@ Widget CenterPage(
                                         ),
                                         Expanded(
                                           child: textField(
+                                            context ,
                                               text: "Enter quantity",
                                               prefixIcon: Icons.numbers,
                                               controller: controller,
@@ -170,7 +150,7 @@ Widget CenterPage(
                                           width: 10,
                                         ),
                                         Text(
-                                          " ${cubit.get(context).orders[index]["price"]}",
+                                          " ${list[index]["price"]}",
                                           style: TextStyle(
                                             color: Colors.green,
                                             fontSize: 17,
@@ -256,15 +236,12 @@ Widget CenterPage(
                                                   cubit
                                                       .get(context)
                                                       .addBill(list: [
-                                                    cubit
-                                                        .get(context)
-                                                        .orders[index]["label"],
+                                                   list[index]["label"],
                                                     controller.text,
                                                     (int.parse(controller.text) *
-                                                        cubit
-                                                            .get(context)
-                                                            .orders[index]["price"])
+                                                        list[index]["price"])
                                                   ]);
+                                                  Navigator.pop(context);
                                                 }
                                               })
                                         ],
@@ -280,10 +257,10 @@ Widget CenterPage(
                     },
                     child: Row(
                       children: [
-                        Expanded(child: text(text: cubit.get(context).orders[index]["id"].toString(), color: Colors.black)),
-                        Expanded(child: text(text: cubit.get(context).orders[index]["label"], color: Colors.black)),
-                        Expanded(child: text(text: cubit.get(context).orders[index]["category"], color: Colors.black)),
-                        Expanded(child: text(text: cubit.get(context).orders[index]["price"].toString(), color: Colors.black)),
+                        Expanded(child: text(text: list[index]["id"].toString(), color: Colors.black)),
+                        Expanded(child: text(text: list[index]["label"], color: Colors.black)),
+                        Expanded(child: text(text: list[index]["category"], color: Colors.black)),
+                        Expanded(child: text(text: list[index]["price"].toString(), color: Colors.black)),
                         if (allItem)
                           Expanded(
                             child: IconButton(
@@ -291,14 +268,21 @@ Widget CenterPage(
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Update()));
+                                          builder: (context) => Update(
+                                            price: list[index]["price"].toString(),
+                                            name: list[index]["label"],
+                                            id: index+1,
+                                          )));
                                 },
                                 icon: Icon(Icons.edit)),
                           ),
                         if (allItem)
                           Expanded(
                             child: IconButton(
-                                onPressed: () {}, icon: Icon(Icons.delete)),
+                                onPressed: () {
+                                  cubit.get(context).deleteItemData(id: list[index]["id"]);
+                                  cubit.get(context).getItemData();
+                                }, icon: Icon(Icons.delete)),
                           ),
                       ],
                     ),
@@ -312,7 +296,7 @@ Widget CenterPage(
                   color: Colors.black,
                 );
               },
-              itemCount: cubit.get(context).orders.length,
+              itemCount: list.length,
             ),
           ),
         ),
@@ -416,9 +400,10 @@ Widget RightPage(context) {
   return Expanded(
     flex: 2,
     child: Padding(
-        padding: EdgeInsets.only(top: 30, left: 20, right: 10),
+        padding: EdgeInsets.only(bottom: 0, left: 20, right: 10),
         child: SingleChildScrollView(
           child: Column(
+
             children: [
               Row(
                 children: [
@@ -470,7 +455,7 @@ Widget RightPage(context) {
                 ),
               ),
               Container(
-                height: 250,
+                height: 450,
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: ListView.separated(
@@ -542,7 +527,9 @@ Widget RightPage(context) {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.only(
+                  bottom: 5
+                ),
                 child: button(
                     context: context,
                     text: "Pay",

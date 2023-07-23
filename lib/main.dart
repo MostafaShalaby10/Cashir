@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lastcashir/authontication/loginPage.dart';
 import 'package:lastcashir/authontication/signupPage.dart';
+import 'package:lastcashir/pages/add_item_page.dart';
+import 'package:lastcashir/pages/all_items.dart';
 import 'package:lastcashir/pages/cold_drink_page.dart';
+import 'package:lastcashir/widgets/mahmoud.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 
@@ -28,12 +31,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => cubit()..createDb(),
+      create: (BuildContext context) => cubit()..createDb() ,
       child: BlocConsumer<cubit , States>(
           builder: (context, state) {
-            return  MaterialApp(
+            return  const MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: Login(),
+              home: HomePage(),
             );
           },
           listener: (context, state) {}),

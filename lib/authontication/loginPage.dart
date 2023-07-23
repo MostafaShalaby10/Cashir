@@ -54,7 +54,7 @@ class _LoginState extends State<Login> {
                           const SizedBox(
                             height: 30,
                           ),
-                          textField(
+                          textField(context ,
                               text: "E-mail",
                               prefixIcon: Icons.email,
                               controller: emailController,
@@ -62,7 +62,7 @@ class _LoginState extends State<Login> {
                           const SizedBox(
                             height: 15,
                           ),
-                          textField(
+                          textField(context ,
                               text: "Password",
                               prefixIcon: Icons.lock_outline,
                               controller: passController,
@@ -111,7 +111,6 @@ class _LoginState extends State<Login> {
 if(state is SuccessfullyLogin)
   {
     print("Login success");
-    cubit.get(context).getItemData();
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(

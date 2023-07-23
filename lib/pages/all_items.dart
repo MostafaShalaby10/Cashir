@@ -37,7 +37,7 @@ class AllItems extends StatelessWidget {
           body: Row(
             children: [
               LeftPage(context , allItems: true),
-              CenterPage(context,allItem: true , scaffoldKey:scaffoldKey  ),
+              CenterPage(context,allItem: true , scaffoldKey:scaffoldKey  , list: cubit.get(context).orders),
 
             ],
           ),

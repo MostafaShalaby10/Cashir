@@ -59,6 +59,7 @@ class _SignUpState extends State<SignUp> {
                             height: 20,
                           ),
                           textField(
+                            context ,
                               text: "Name",
                               prefixIcon: Icons.person_outline,
                               controller: nameController,
@@ -67,6 +68,7 @@ class _SignUpState extends State<SignUp> {
                             height: 25,
                           ),
                           textField(
+                            context ,
                               text: "E-mail",
                               prefixIcon: Icons.email,
                               controller: emailController,
@@ -75,6 +77,7 @@ class _SignUpState extends State<SignUp> {
                             height: 25,
                           ),
                           textField(
+                            context ,
                               text: "Password",
                               prefixIcon: Icons.lock_outline,
                               controller: passController,
@@ -92,6 +95,7 @@ class _SignUpState extends State<SignUp> {
                             height: 25,
                           ),
                           textField(
+                            context ,
                               text: "CONF-Password",
                               prefixIcon: Icons.lock_outline,
                               controller: confPassController,

@@ -39,7 +39,7 @@ class Desertpage extends StatelessWidget {
           body: Row(
             children: [
               LeftPage(context , allItems: false),
-              CenterPage(context,allItem: false , scaffoldKey: scaffoldKey),
+              CenterPage(context,allItem: false , scaffoldKey: scaffoldKey , list: cubit.get(context).dessert),
               RightPage(context),
             ],
           ),

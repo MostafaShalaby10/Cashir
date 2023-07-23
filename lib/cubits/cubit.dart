@@ -31,6 +31,8 @@ class cubit extends Cubit<States> {
   List<dynamic> dessert = [];
   List<dynamic> coldDrinks = [];
   List<dynamic> hotDrinks = [];
+  List<dynamic> searchById = [];
+  List<dynamic> searchByName = [];
 
   double total = 0;
 
@@ -103,6 +105,8 @@ class cubit extends Cubit<States> {
       print("database opend successfully");
     }).then((value) {
       db = value;
+      getItemData();
+
       emit(SuccessfullyCreateDataBase());
     }).catchError((error) {
       print("Can't open data");
@@ -142,11 +146,11 @@ class cubit extends Cubit<States> {
               "insert into $itemTable (label , category , price ) values ('$label' ,  '$category' , '$price')")
           .then((value) {
         print("insert success");
-        emit(LoadingInsertItemData());
+        emit(SuccessfullyInsertItemData());
       }).catchError((error) {
         print("insert error");
         print(error.toString());
-        emit(LoadingInsertItemData());
+        emit(ErrorInsertItemData());
       });
     });
   }
@@ -164,28 +168,27 @@ class cubit extends Cubit<States> {
   }
 
   void getItemData() {
+    orders=[];
+    dessert = [];
+    coldDrinks = [];
+    hotDrinks = [];
+    food = [];
     emit(LoadingGetItemData());
-    db?.rawQuery("SELECT * FROM $itemTable").then((value) {
+    db?.rawQuery("SELECT * FROM $itemTable ").then((value) {
       // print(value[0]["id"]);
       value.forEach((element) {
         orders.add(element);
-        if(element["category"]=="food")
-          {
-            food.add(element);
-          }else if(element["category"]=="dessert")
-        {
+        if (element["category"] == "food") {
+          food.add(element);
+        } else if (element["category"] == "dessert") {
           dessert.add(element);
-        }else if(element["category"]=="hot drink")
-        {
+        } else if (element["category"] == "hot drink") {
           hotDrinks.add(element);
-        }else if(element["category"]==" cold drink")
-        {
+        } else if (element["category"] == "cold drink") {
           coldDrinks.add(element);
         }
       });
-      // print(orders[0][0]);
-      print(orders[0]['id']);
-      emit(SuccessfullyGetItemData());
+      print(orders);
     }).catchError((error) {
       print("Error in getData");
       print(error.toString());
@@ -195,14 +198,14 @@ class cubit extends Cubit<States> {
 
   void updateItemData({
     required int id,
-    required int price,
-    required int name,
-    required int category,
+    required double price,
+    required String name,
+    required String category,
   }) async {
     emit(LoadingUpdateItemData());
 
     db?.rawUpdate(
-      'UPDATE $itemTable SET name = ? , price = ? , category=? WHERE id = ?',
+      'UPDATE $itemTable SET label = ? , price = ? , category=? WHERE id = ?',
       ['$name', '$price', '$category', id],
     ).then((value) {
       emit(SuccessfullyUpdateItemData());
@@ -239,6 +242,7 @@ class cubit extends Cubit<States> {
       'DELETE FROM $itemTable  WHERE id = ?',
       [id],
     ).then((value) {
+      print("deleted successfully");
       emit(SuccessfullyDeleteItemData());
     }).catchError((error) {
       print(error.toString());
@@ -270,6 +274,41 @@ class cubit extends Cubit<States> {
     }).catchError((error) {
       print(error.toString());
       emit(ErrorLogin());
+    });
+  }
+
+
+  void searchByIdFunction({required int id}) {
+    searchById=[];
+
+    db?.rawQuery("SELECT * FROM $itemTable WHERE id LIKE '%$id%' ").then((value) {
+      // print(value[0]["id"]);
+      value.forEach((element) {
+        searchById.add(element);
+      });
+      emit(SuccessfullySearchById());
+
+    }).catchError((error) {
+      print("Error in search by ID");
+      print(error.toString());
+      emit(ErrorSearchById());
+    });
+  }
+
+  void searchByNameFunction({required String name}) {
+    searchByName=[];
+
+    db?.rawQuery("SELECT * FROM $itemTable WHERE label LIKE '%$name%'" ).then((value) {
+      // print(value[0]["id"]);
+      value.forEach((element) {
+        searchByName.add(element);
+
+      });
+      emit(SuccessfullySearchByName());
+    }).catchError((error) {
+      print("Error in search by name");
+      print(error.toString());
+      emit(ErrorSearchByName());
     });
   }
 }

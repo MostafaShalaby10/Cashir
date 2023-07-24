@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
+import 'package:lastcashir/pages/all_items.dart';
 import 'package:lastcashir/pages/home_page.dart';
 
 import '../components/custom_button.dart';
@@ -47,7 +48,7 @@ class _AddItemState extends State<AddItem> {
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(builder: (context) => const AllItems()),
                     (route) => false);
               },
               icon: const Icon(Icons.arrow_back_ios_new),
@@ -57,7 +58,7 @@ class _AddItemState extends State<AddItem> {
             backgroundColor: HexColor('#549AAB')),
         body: Row(
           children: [
-            LeftPage(context, allItems: false),
+            leftPage(context, allItems: false , users: false),
             Expanded(
               flex: 6,
               child: Padding(

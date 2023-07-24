@@ -52,3 +52,19 @@ class ErrorSearchById extends States{}
 class ErrorSearchByName extends States{}
 class SuccessfullySearchByName extends States{}
 class SuccessfullySearchById extends States{}
+
+class LoadingCreateBill extends States{}
+class SuccessfullyCreateBill extends States{}
+class ErrorCreateBill extends States{}
+
+class LoadingCreateDetails extends States{}
+class SuccessfullyCreateDetails extends States{}
+class ErrorCreateDetails extends States{}
+
+class LoadingGetBillData extends States{}
+class SuccessfullyGetBillData extends States{}
+class ErrorGetBillData extends States{}
+
+class LoadingGetDetailsData extends States{}
+class SuccessfullyGetDetailsData extends States{}
+class ErrorGetDetailsData extends States{}

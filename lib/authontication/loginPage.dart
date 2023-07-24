@@ -1,10 +1,12 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
+import 'package:lastcashir/pages/admin/adminhomepage.dart';
 import 'package:lastcashir/pages/home_page.dart';
 
 class Login extends StatefulWidget {
@@ -76,7 +78,7 @@ class _LoginState extends State<Login> {
                                   isPassword = !isPassword;
                                 });
                               }),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           ConditionalBuilder(
@@ -97,7 +99,7 @@ class _LoginState extends State<Login> {
                                     }
                                   }),
                               fallback: (context) =>
-                                  Center(child: CircularProgressIndicator()))
+                                  const Center(child: CircularProgressIndicator()))
                         ],
                       ),
                     ),
@@ -110,16 +112,23 @@ class _LoginState extends State<Login> {
         listener: (context, state) {
 if(state is SuccessfullyLogin)
   {
-    print("Login success");
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (context) => HomePage()),
-            (route) => false);
-  }else if(state is ErrorLogin)
-    {
-      print("Login Failed");
+
+    if(emailController.text=="admin@gmail.com" && passController.text=="123456")
+      {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const AdminHomePage()),
+                (route) => false);
+      }else{
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const HomePage()),
+              (route) => false);
     }
+
+  }
         });
   }
 }

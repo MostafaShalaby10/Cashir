@@ -1,12 +1,13 @@
-
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/authontication/loginPage.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
+import 'package:lastcashir/pages/admin/bills.dart';
 import 'package:lastcashir/widgets/mahmoud.dart';
 
 import '../widgets/center_page.dart';
@@ -18,9 +19,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
     var scaffoldKey = GlobalKey<ScaffoldState>();
-    var formKey = GlobalKey<FormState>();
-    TextEditingController searchByID = TextEditingController();
-    TextEditingController searchByName = TextEditingController();
 
     return BlocConsumer<cubit, States>(
       builder: (context, state) {
@@ -36,19 +34,35 @@ class HomePage extends StatelessWidget {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Mahmoud()));
                   },
-                  icon: Icon(Icons.search))
+                  icon: Icon(Icons.search)),
+              SizedBox(
+                width: 10,
+              ),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                        (route) => false);
+                  },
+                  child: Text("Logout", style: TextStyle(color: Colors.black),))
             ],
           ),
-          body: Row(
-            children: [
-              LeftPage(context, allItems: false),
-              CenterPage(context,
-                  allItem: false,
-                  scaffoldKey: scaffoldKey,
-                  list: cubit.get(context).orders),
-              RightPage(context),
-            ],
-          ),
+          body: ConditionalBuilder(
+              condition: state is! LoadingGetItemData,
+              builder: (context) => Row(
+                    children: [
+                      leftPage(context, allItems: false, users: false),
+                      centerPage(context,
+                          allItem: false,
+                          scaffoldKey: scaffoldKey,
+                          list: cubit.get(context).orders,
+                          users: false),
+                      rightPage(context),
+                    ],
+                  ),
+              fallback: (context) =>
+                  Center(child: CircularProgressIndicator())),
         );
       },
       listener: (context, state) {},

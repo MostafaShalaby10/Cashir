@@ -38,9 +38,9 @@ class FoodPage extends StatelessWidget {
           ),
           body: Row(
             children: [
-              LeftPage(context , allItems: false),
-              CenterPage(context, allItem: false , scaffoldKey: scaffoldKey, list: cubit.get(context).food),
-              RightPage(context),
+              leftPage(context , allItems: false, users: false),
+              centerPage(context, allItem: false , scaffoldKey: scaffoldKey, list: cubit.get(context).food, users: false),
+              rightPage(context),
             ],
           ),
         );

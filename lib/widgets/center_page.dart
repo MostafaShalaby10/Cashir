@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
+import 'package:lastcashir/authontication/signupPage.dart';
 import 'package:lastcashir/cubits/cubit.dart';
+import 'package:lastcashir/main.dart';
 import 'package:lastcashir/pages/add_item_page.dart';
+import 'package:lastcashir/pages/admin/updateuser.dart';
 import 'package:lastcashir/pages/update_page.dart';
-import 'package:lastcashir/widgets/mahmoud.dart';
 
 import '../components/custom_button.dart';
 import '../pages/all_items.dart';
@@ -12,26 +15,121 @@ import '../pages/desert_page.dart';
 import '../pages/food_page.dart';
 import '../pages/hot_drink_page.dart';
 
-Widget CenterPage(
+Widget centerPage(
   context, {
   required bool allItem,
   required GlobalKey<ScaffoldState> scaffoldKey,
-      required List<dynamic>list,
+  required List<dynamic> list,
+  required bool users,
 }) {
   TextEditingController controller = TextEditingController();
-  TextEditingController searchByID = TextEditingController();
-  TextEditingController searchByName = TextEditingController();
-  var formKey = GlobalKey<FormState>();
 
+  var formKey = GlobalKey<FormState>();
+  if (users == true) {
+    return Expanded(
+      flex: 6,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              color: HexColor('#123740'),
+              child: Row(
+                children: [
+                  Expanded(child: text(text: 'ID', color: Colors.white)),
+                  Expanded(child: text(text: 'Name', color: Colors.white)),
+                  Expanded(child: text(text: 'email', color: Colors.white)),
+                  Expanded(child: text(text: 'password', color: Colors.white)),
+                  if (allItem)
+                    Expanded(child: text(text: 'Edit', color: Colors.white)),
+                  if (allItem)
+                    Expanded(child: text(text: 'Delete', color: Colors.white)),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: text(
+                                text: list[0][index]["id"].toString(),
+                                color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[0][index]["name"],
+                                color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[0][index]["email"],
+                                color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[0][index]["password"],
+                                color: Colors.black)),
+                        if (allItem)
+                          Expanded(
+                            child: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => UpdateUser(
+                                        id: list[0][index]["id"].toString(),
+                                        name: list[0][index]["name"],
+                                        password: list[0][index]["password"],
+                                        email: list[0][index]["email"],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                icon: const Icon(Icons.edit)),
+                          ),
+                        if (allItem)
+                          Expanded(
+                            child: IconButton(
+                                onPressed: () {
+                                  cubit
+                                      .get(context)
+                                      .deleteUserData(id: list[0][index]["id"]);
+                                  cubit.get(context).getUserData();
+                                },
+                                icon: const Icon(Icons.delete)),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Container(
+                    height: 1,
+                    width: double.infinity,
+                    color: Colors.black,
+                  );
+                },
+                itemCount: list[0].length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   return Expanded(
     flex: 6,
     child: Column(
       children: [
-
         Padding(
           padding: const EdgeInsets.all(20.0),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             color: HexColor('#123740'),
             child: Row(
               children: [
@@ -52,215 +150,225 @@ Widget CenterPage(
             padding: const EdgeInsets.all(16),
             child: ListView.separated(
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: InkWell(
-                    onTap: () {
-                      if (!allItem) {
-                        cubit.get(context).addBill(list: [
-                         list[index]['label'],
-                          1,
-                         list[index]["price"]
-                        ]);
-                      }
-                    },
-                    onDoubleTap: () {
-                      if (!allItem) {
-                        scaffoldKey.currentState!.showBottomSheet((context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width/2 ,
-                            height: MediaQuery.of(context).size.height / 2,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5) ,
-                              border: Border.all(color: Colors.black)
-                            ),
-                            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                            child: Form(
-                              key: formKey,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ////////////////////////
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Name : ",
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 17,
-                                          ),
+                return InkWell(
+                  onTap: () {
+                    if (!allItem) {
+                      cubit.get(context).addBill(list: [
+                        list[index]['label'],
+                        1,
+                        list[index]["price"]
+                      ]);
+                    }
+                  },
+                  onDoubleTap: () {
+                    if (!allItem) {
+                      scaffoldKey.currentState!.showBottomSheet((context) {
+                        return Container(
+                          width: MediaQuery.of(context).size.width / 2,
+                          height: MediaQuery.of(context).size.height / 2,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.black)),
+                          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                          child: Form(
+                            key: formKey,
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ////////////////////////
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "Name : ",
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 17,
                                         ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          list[index]['label'],
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 17,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Quantity : ",
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 17,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Expanded(
-                                          child: textField(
-                                            context ,
-                                              text: "Enter quantity",
-                                              prefixIcon: Icons.numbers,
-                                              controller: controller,
-                                              type: TextInputType.number,
-                                              suffixIcon: Icons.cancel,
-                                              function: () {
-                                                controller.clear();
-                                              }),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "price : ",
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 17,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          " ${list[index]["price"]}",
-                                          style: TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 17,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      width: double.infinity,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '1'),
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '2'),
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '3'),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '4'),
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '5'),
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '6'),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            children: [
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '7'),
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '8'),
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '9'),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              calculatorNumber(context,
-                                                  controller: controller,
-                                                  number: '0'),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 30,
-                                          ),
-                                          button(
-                                              context: context,
-                                              text: "Order",
-                                              color: HexColor("#549AAB"),
-                                              minWidth: 50,
-                                              height: 50,
-                                              function: () {
-                                                if (formKey.currentState!
-                                                    .validate()) {
-                                                  cubit
-                                                      .get(context)
-                                                      .addBill(list: [
-                                                   list[index]["label"],
-                                                    controller.text,
-                                                    (int.parse(controller.text) *
-                                                        list[index]["price"])
-                                                  ]);
-                                                  Navigator.pop(context);
-                                                }
-                                              })
-                                        ],
                                       ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        list[index]['label'],
+                                        style: const TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "Quantity : ",
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: textField(context,
+                                            text: "Enter quantity",
+                                            prefixIcon: Icons.numbers,
+                                            controller: controller,
+                                            type: TextInputType.number,
+                                            suffixIcon: Icons.cancel,
+                                            function: () {
+                                          controller.clear();
+                                        }),
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "price : ",
+                                        style: TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        " ${list[index]["price"]}",
+                                        style: const TextStyle(
+                                          color: Colors.green,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '1'),
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '2'),
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '3'),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '4'),
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '5'),
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '6'),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '7'),
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '8'),
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '9'),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            calculatorNumber(context,
+                                                controller: controller,
+                                                number: '0'),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        button(
+                                            context: context,
+                                            text: "Order",
+                                            color: HexColor("#549AAB"),
+                                            minWidth: 50,
+                                            height: 50,
+                                            function: () {
+                                              if (formKey.currentState!
+                                                  .validate()) {
+                                                cubit
+                                                    .get(context)
+                                                    .addBill(list: [
+                                                  list[index]["label"],
+                                                  int.parse(controller.text),
+                                                  (int.parse(controller.text) *
+                                                      list[index]["price"])
+                                                ]);
+                                                Navigator.pop(context);
+                                              }
+                                            })
+                                      ],
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        });
-                      }
-                    },
+                          ),
+                        );
+                      });
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Row(
                       children: [
-                        Expanded(child: text(text: list[index]["id"].toString(), color: Colors.black)),
-                        Expanded(child: text(text: list[index]["label"], color: Colors.black)),
-                        Expanded(child: text(text: list[index]["category"], color: Colors.black)),
-                        Expanded(child: text(text: list[index]["price"].toString(), color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[index]["id"].toString(),
+                                color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[index]["label"],
+                                color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[index]["category"],
+                                color: Colors.black)),
+                        Expanded(
+                            child: text(
+                                text: list[index]["price"].toString(),
+                                color: Colors.black)),
                         if (allItem)
                           Expanded(
                             child: IconButton(
@@ -269,20 +377,24 @@ Widget CenterPage(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => Update(
-                                            price: list[index]["price"].toString(),
-                                            name: list[index]["label"],
-                                            id: index+1,
-                                          )));
+                                                price: list[index]["price"]
+                                                    .toString(),
+                                                name: list[index]["label"],
+                                                id: list[index]["id"],
+                                              )));
                                 },
-                                icon: Icon(Icons.edit)),
+                                icon: const Icon(Icons.edit)),
                           ),
                         if (allItem)
                           Expanded(
                             child: IconButton(
                                 onPressed: () {
-                                  cubit.get(context).deleteItemData(id: list[index]["id"]);
+                                  cubit
+                                      .get(context)
+                                      .deleteItemData(id: list[index]["id"]);
                                   cubit.get(context).getItemData();
-                                }, icon: Icon(Icons.delete)),
+                                },
+                                icon: const Icon(Icons.delete)),
                           ),
                       ],
                     ),
@@ -305,7 +417,7 @@ Widget CenterPage(
   );
 }
 
-Widget LeftPage(context, {required bool allItems}) {
+Widget leftPage(context, {required bool allItems, required bool users}) {
   if (allItems == false) {
     return Expanded(
       flex: 1,
@@ -314,30 +426,29 @@ Widget LeftPage(context, {required bool allItems}) {
         child: Padding(
           padding: const EdgeInsets.only(top: 30, left: 20),
           child: ListView.separated(
-
             itemBuilder: (context, index) => InkWell(
               onTap: () {
+
                 if (index == 0) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return AllItems();
+                    return const FoodPage();
                   }));
                 }
-                if (index == 1)
+                if (index == 1) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return FoodPage();
+                    return const ColdDrink();
                   }));
-                if (index == 2)
+                }
+                if (index == 2) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return ColdDrink();
+                    return const HotDrink();
                   }));
-                if (index == 3)
+                }
+                if (index == 3) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return HotDrink();
+                    return const Desertpage();
                   }));
-                if (index == 4)
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return Desertpage();
-                  }));
+                }
               },
               child: Row(
                 children: [
@@ -350,7 +461,7 @@ Widget LeftPage(context, {required bool allItems}) {
                   ),
                   Text(
                     cubit.get(context).items[index],
-                    style: TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.white),
                   )
                 ],
               ),
@@ -364,6 +475,38 @@ Widget LeftPage(context, {required bool allItems}) {
       ),
     );
   }
+  if (users == true) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        color: HexColor('#549AAB'),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 30, left: 20),
+          child: InkWell(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const SignUp()));
+              },
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Icon(Icons.add),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "Add users",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                ),
+              )),
+        ),
+      ),
+    );
+  }
   return Expanded(
     flex: 1,
     child: Container(
@@ -372,16 +515,16 @@ Widget LeftPage(context, {required bool allItems}) {
         padding: const EdgeInsets.only(top: 30, left: 20),
         child: InkWell(
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => AddItem()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AddItem()));
             },
-            child: Container(
+            child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: const [
                   Icon(Icons.add),
-                  const SizedBox(
+                  SizedBox(
                     width: 15,
                   ),
                   Text(
@@ -396,22 +539,21 @@ Widget LeftPage(context, {required bool allItems}) {
   );
 }
 
-Widget RightPage(context) {
+Widget rightPage(context) {
   return Expanded(
     flex: 2,
     child: Padding(
-        padding: EdgeInsets.only(bottom: 0, left: 20, right: 10),
+        padding: const EdgeInsets.only(bottom: 0, left: 20, right: 10),
         child: SingleChildScrollView(
           child: Column(
-
             children: [
               Row(
                 children: [
-                  Text(
+                  const Text(
                     "Current order",
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   button(
                       context: context,
                       text: "Clear all",
@@ -423,14 +565,14 @@ Widget RightPage(context) {
                       }),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               Container(
                 color: Colors.grey[300],
                 height: 40,
                 child: Row(
-                  children: [
+                  children: const [
                     Expanded(
                         child: Text(
                       "Item",
@@ -454,7 +596,7 @@ Widget RightPage(context) {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 450,
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
@@ -488,7 +630,7 @@ Widget RightPage(context) {
                                           .get(context)
                                           .removeBillItem(index: index);
                                     },
-                                    icon: Icon(Icons.remove),
+                                    icon: const Icon(Icons.remove),
                                   ),
                                 ),
                               ],
@@ -505,19 +647,20 @@ Widget RightPage(context) {
               Padding(
                 padding: const EdgeInsets.only(bottom: 3),
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   color: Colors.grey[300],
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         "Total ",
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         "${cubit.get(context).total.toStringAsFixed(2)} ",
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
@@ -527,9 +670,7 @@ Widget RightPage(context) {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 5
-                ),
+                padding: const EdgeInsets.only(bottom: 5),
                 child: button(
                     context: context,
                     text: "Pay",
@@ -537,8 +678,13 @@ Widget RightPage(context) {
                     minWidth: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 12,
                     function: () {
+                      cubit.get(context).createBill(
+                          name: name.toString(),
+                          total: cubit.get(context).total,
+                          date:
+                              "${DateFormat.yMMM().format(DateTime.now())} ${TimeOfDay.now().format(context).toString()}");
                       cubit.get(context).total = 0;
-                      cubit.get(context).clearBill();
+                      // cubit.get(context).clearBill();
                     }),
               ),
             ],
@@ -546,3 +692,4 @@ Widget RightPage(context) {
         )),
   );
 }
+

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/pages/admin/adminhomepage.dart';
 
 import '../components/custom_button.dart';
 import '../cubits/cubit.dart';
@@ -15,33 +16,33 @@ class AllItems extends StatelessWidget {
   Widget build(BuildContext context) {
     var scaffoldKey = GlobalKey<ScaffoldState>();
 
-    return BlocConsumer<cubit,States>(
-      builder: (context,state){
-        return  Scaffold(
+    return BlocConsumer<cubit, States>(
+      builder: (context, state) {
+        return Scaffold(
           key: scaffoldKey,
           appBar: AppBar(
               automaticallyImplyLeading: false,
               leading: IconButton(
-                onPressed: (){
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => AdminHomePage()),
+                      (route) => false);
                 },
-                icon: Icon(
-                    Icons.arrow_back_ios_new
-                ),
+                icon: Icon(Icons.arrow_back_ios_new),
               ),
               elevation: 0,
               title: Text("All Items Ubdate And Delete"),
-
               backgroundColor: HexColor('#549AAB')),
-
           body: Row(
             children: [
-              LeftPage(context , allItems: true),
-              CenterPage(context,allItem: true , scaffoldKey:scaffoldKey  , list: cubit.get(context).orders),
-
+              leftPage(context, allItems: true, users: false),
+              centerPage(context,
+                  allItem: true,
+                  scaffoldKey: scaffoldKey,
+                  list: cubit.get(context).orders, users: false),
             ],
           ),
-
         );
       },
       listener: (context, state) {},

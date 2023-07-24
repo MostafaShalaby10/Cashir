@@ -36,9 +36,9 @@ class HotDrink extends StatelessWidget {
               backgroundColor: HexColor('#549AAB')),
           body: Row(
             children: [
-              LeftPage(context, allItems: false),
-              CenterPage(context, allItem: false, scaffoldKey: scaffoldKey, list: cubit.get(context).hotDrinks),
-              RightPage(context),
+              leftPage(context, allItems: false, users: false),
+              centerPage(context, allItem: false, scaffoldKey: scaffoldKey, list: cubit.get(context).hotDrinks, users: false),
+              rightPage(context),
             ],
           ),
         );

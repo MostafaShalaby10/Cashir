@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lastcashir/cubits/states.dart';
+import 'package:lastcashir/main.dart';
 import 'package:sqflite/sqflite.dart';
 
 class cubit extends Cubit<States> {
@@ -13,7 +14,6 @@ class cubit extends Cubit<States> {
   Color? color;
 
   List<String> items = [
-    "All items",
     "Food",
     "Cold Drinks",
     "Hot Drinks",
@@ -26,8 +26,11 @@ class cubit extends Cubit<States> {
     Icons.water_drop_outlined,
     Icons.message
   ];
+  List<dynamic> users = [];
   List<dynamic> orders = [];
   List<dynamic> food = [];
+  List<dynamic> billList = [];
+  List<dynamic> detailsList = [];
   List<dynamic> dessert = [];
   List<dynamic> coldDrinks = [];
   List<dynamic> hotDrinks = [];
@@ -44,7 +47,7 @@ class cubit extends Cubit<States> {
 
   void addBill({required List list}) {
     bill.add(list);
-    print(bill);
+    print("Bill is : $bill");
     calculateBill();
     emit(CreateBill());
   }
@@ -83,6 +86,8 @@ class cubit extends Cubit<States> {
   String dbName = "Cashier";
   String userTable = "Users";
   String itemTable = "Items";
+  String billTable = "bill";
+  String detailsTable = "details";
   int versionCode = 1;
 
   Database? db;
@@ -94,7 +99,9 @@ class cubit extends Cubit<States> {
       database
           .execute(
               "create table $userTable (id integer primary key , name text , password text , email text ) ;"
-              " create table $itemTable (id integer primary key , label text , category text , price double )")
+              " create table $itemTable (id integer primary key , label text , category text , price double ) ;"
+              "create table $billTable (id integer primary key , name text , total double , date text );"
+              "create table $detailsTable (details_id integer , item text , quantity integer ,price double ,  FOREIGN KEY (details_id) REFERENCES $billTable(id) )")
           .then((value) {
         print("create data success");
       }).catchError((error) {
@@ -103,7 +110,8 @@ class cubit extends Cubit<States> {
       });
     }, onOpen: (database) {
       print("database opend successfully");
-    }).then((value) {
+
+        }).then((value) {
       db = value;
       getItemData();
 
@@ -156,9 +164,11 @@ class cubit extends Cubit<States> {
   }
 
   void getUserData() {
+    users=[];
     emit(LoadingGetUserData());
     db?.rawQuery("SELECT * FROM $userTable").then((value) {
-      print(value);
+       users.add(value);
+       print(users);
       emit(SuccessfullyGetUserData());
     }).catchError((error) {
       print("Error in getData");
@@ -168,7 +178,7 @@ class cubit extends Cubit<States> {
   }
 
   void getItemData() {
-    orders=[];
+    orders = [];
     dessert = [];
     coldDrinks = [];
     hotDrinks = [];
@@ -208,6 +218,7 @@ class cubit extends Cubit<States> {
       'UPDATE $itemTable SET label = ? , price = ? , category=? WHERE id = ?',
       ['$name', '$price', '$category', id],
     ).then((value) {
+      print("saddsasda");
       emit(SuccessfullyUpdateItemData());
     }).catchError((error) {
       print(error.toString());
@@ -217,9 +228,9 @@ class cubit extends Cubit<States> {
 
   void updateUserData({
     required int id,
-    required int email,
-    required int name,
-    required int password,
+    required String email,
+    required String name,
+    required String password,
   }) async {
     emit(LoadingUpdateUserData());
 
@@ -227,6 +238,8 @@ class cubit extends Cubit<States> {
       'UPDATE $userTable SET name = ? , email = ? , password=? WHERE id = ?',
       ['$name', '$email', '$password', id],
     ).then((value) {
+print("update");
+getUserData();
       emit(SuccessfullyUpdateUserData());
     }).catchError((error) {
       print(error.toString());
@@ -271,23 +284,24 @@ class cubit extends Cubit<States> {
     db?.rawQuery("SELECT * FROM $userTable WHERE password = ? AND email = ? ",
         [password, email]).then((value) {
       value.isEmpty ? emit(ErrorLogin()) : emit(SuccessfullyLogin());
+      name = value[0]["name"].toString();
     }).catchError((error) {
       print(error.toString());
       emit(ErrorLogin());
     });
   }
 
-
   void searchByIdFunction({required int id}) {
-    searchById=[];
+    searchById = [];
 
-    db?.rawQuery("SELECT * FROM $itemTable WHERE id LIKE '%$id%' ").then((value) {
+    db
+        ?.rawQuery("SELECT * FROM $itemTable WHERE id LIKE '%$id%' ")
+        .then((value) {
       // print(value[0]["id"]);
       value.forEach((element) {
         searchById.add(element);
       });
       emit(SuccessfullySearchById());
-
     }).catchError((error) {
       print("Error in search by ID");
       print(error.toString());
@@ -296,13 +310,14 @@ class cubit extends Cubit<States> {
   }
 
   void searchByNameFunction({required String name}) {
-    searchByName=[];
+    searchByName = [];
 
-    db?.rawQuery("SELECT * FROM $itemTable WHERE label LIKE '%$name%'" ).then((value) {
+    db
+        ?.rawQuery("SELECT * FROM $itemTable WHERE label LIKE '%$name%'")
+        .then((value) {
       // print(value[0]["id"]);
       value.forEach((element) {
         searchByName.add(element);
-
       });
       emit(SuccessfullySearchByName());
     }).catchError((error) {
@@ -311,4 +326,104 @@ class cubit extends Cubit<States> {
       emit(ErrorSearchByName());
     });
   }
+
+  void createBill(
+      {required String name,
+      required double total,
+      required String date}) async {
+    emit(LoadingCreateBill());
+    await db!.transaction((txn) async {
+      await txn
+          .rawInsert(
+              "insert into $billTable (name , total , date ) values ('$name' ,  '$total' , '$date')")
+          .then((value) {
+        for (int i = 0; i < bill.length; i++) {
+          createDetails(
+              id: value,
+              item: bill[i][0],
+              quantity:bill[i][1],
+              price: bill[i][2]);
+        }
+        print("create bill success");
+        clearBill();
+        emit(SuccessfullyCreateBill());
+      }).catchError((error) {
+        print("insert error");
+        print(error.toString());
+        emit(ErrorCreateBill());
+      });
+    });
+  }
+
+  // "create table $detailsTable (details_id integer , item text , quantity integer ,price double ,  FOREIGN KEY (details_id) REFERENCES $billTable(id) )")
+
+  void createDetails(
+      {required int id,
+      required String item,
+      required int quantity,
+      required double price}) async {
+    emit(LoadingCreateDetails());
+    await db!.transaction((txn) async {
+      await txn
+          .rawInsert(
+              "insert into $detailsTable (details_id , item , quantity , price ) values ('$id' ,  '$item' , '$quantity' , '$price')")
+          .then((value) {
+        print("create details success");
+        emit(SuccessfullyCreateDetails());
+      }).catchError((error) {
+        print("details error");
+        print(error.toString());
+        emit(ErrorCreateDetails());
+      });
+    });
+  }
+
+  void getBillData() {
+    billList = [];
+    emit(LoadingGetBillData());
+    print("dsajisadjisad");
+    db?.rawQuery("SELECT * FROM $billTable").then((value) {
+      print("asdhwuiqdhuihwdqiu ${bill.length}");
+
+      billList.add(value);
+      print(billList[0][0]);
+      // getDetailsData();
+      // showData();
+      emit(SuccessfullyGetBillData());
+    }).catchError((error) {
+      print(error.toString());
+      emit(ErrorGetBillData());
+    });
+  }
+
+void getDetailsData({required int id}){
+    detailsList = [];
+  emit(LoadingGetDetailsData());
+  db?.rawQuery("SELECT * FROM $detailsTable WHERE details_id = ?" , [id]).then((value) {
+    print("details table : $value");
+    detailsList.add(value);
+    print(detailsList);
+    emit(SuccessfullyGetDetailsData());
+  }).catchError((error) {
+    print("Error in getData Details");
+    print(error.toString());
+    emit(ErrorGetDetailsData());
+  });
+}
+// void showData()
+// {
+//   db?.rawQuery("SELECT * FROM $billTable JOIN $detailsTable ON $billTable.id = $detailsTable.details_id").then((value) {
+//     print(value);
+//     detailsList.add(value);
+//     print("asdasdads");
+//     print(detailsList[0].length);
+//     print("asdasdads");
+//
+//     emit(SuccessfullyGetUserData());
+//   }).catchError((error) {
+//     print("Error in getData");
+//     print(error.toString());
+//     emit(ErrorGetUserData());
+//   });
+// }
 }

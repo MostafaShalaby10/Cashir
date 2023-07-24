@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:intl/intl.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
@@ -19,13 +21,17 @@ class Mahmoud extends StatelessWidget {
         builder: (context, state) {
           return Scaffold(
             key: scaffoldKey,
-            appBar: AppBar(),
-            body: Container(
+            appBar: AppBar(
+              title: const Text("Search"),
+              backgroundColor: HexColor('#549AAB'),
+            ),
+            body: SizedBox(
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
+
                     Row(
                       children: [
                         Expanded(
@@ -61,7 +67,7 @@ class Mahmoud extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                   CenterPage(context, allItem: false, scaffoldKey: scaffoldKey, list: list),
+                   centerPage(context, allItem: false, scaffoldKey: scaffoldKey, list: list, users: false),
                   ],
                 ),
               ),

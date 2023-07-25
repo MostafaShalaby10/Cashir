@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           builder: (context, state) {
             return const  MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: Login(),
+              home: HomePage(),
             );
           },
           listener: (context, state) {}),

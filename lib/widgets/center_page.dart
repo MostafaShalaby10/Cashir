@@ -6,6 +6,7 @@ import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/main.dart';
 import 'package:lastcashir/pages/add_item_page.dart';
 import 'package:lastcashir/pages/admin/updateuser.dart';
+import 'package:lastcashir/pages/fatora.dart';
 import 'package:lastcashir/pages/update_page.dart';
 
 import '../components/custom_button.dart';
@@ -678,12 +679,20 @@ Widget rightPage(context) {
                     minWidth: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 12,
                     function: () {
-                      cubit.get(context).createBill(
-                          name: name.toString(),
-                          total: cubit.get(context).total,
-                          date:
-                              "${DateFormat.yMMM().format(DateTime.now())} ${TimeOfDay.now().format(context).toString()}");
-                      cubit.get(context).total = 0;
+                      if(cubit.get(context).bill.isNotEmpty)
+                        {
+                          cubit.get(context).createBill(
+                              name: name.toString(),
+                              total: cubit.get(context).total,
+                              date:
+                              "${DateFormat.yMMMd().format(DateTime.now())} ${TimeOfDay.now().format(context).toString()}");
+                         Navigator.push(context, MaterialPageRoute(builder: (context)=>FatoraDesign()));
+                          cubit.get(context).total = 0;
+
+                        }else
+                          {
+                            print("Empty");
+                          }
                       // cubit.get(context).clearBill();
                     }),
               ),

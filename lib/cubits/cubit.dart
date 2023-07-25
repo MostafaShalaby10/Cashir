@@ -114,7 +114,6 @@ class cubit extends Cubit<States> {
         }).then((value) {
       db = value;
       getItemData();
-
       emit(SuccessfullyCreateDataBase());
     }).catchError((error) {
       print("Can't open data");
@@ -344,6 +343,9 @@ getUserData();
               quantity:bill[i][1],
               price: bill[i][2]);
         }
+        getBillData();
+        getDetailsData(id: value) ;
+
         print("create bill success");
         clearBill();
         emit(SuccessfullyCreateBill());
@@ -383,10 +385,12 @@ getUserData();
     emit(LoadingGetBillData());
     print("dsajisadjisad");
     db?.rawQuery("SELECT * FROM $billTable").then((value) {
-      print("asdhwuiqdhuihwdqiu ${bill.length}");
-
+print(value[value.length-1]);
       billList.add(value);
-      print(billList[0][0]);
+      // print(billList);
+      // print(billList.length);
+      print(billList[0][billList[0].length-1]);
+      print(billList.length-1);
       // getDetailsData();
       // showData();
       emit(SuccessfullyGetBillData());
@@ -402,7 +406,6 @@ void getDetailsData({required int id}){
   db?.rawQuery("SELECT * FROM $detailsTable WHERE details_id = ?" , [id]).then((value) {
     print("details table : $value");
     detailsList.add(value);
-    print(detailsList);
     emit(SuccessfullyGetDetailsData());
   }).catchError((error) {
     print("Error in getData Details");
@@ -410,20 +413,5 @@ void getDetailsData({required int id}){
     emit(ErrorGetDetailsData());
   });
 }
-// void showData()
-// {
-//   db?.rawQuery("SELECT * FROM $billTable JOIN $detailsTable ON $billTable.id = $detailsTable.details_id").then((value) {
-//     print(value);
-//     detailsList.add(value);
-//     print("asdasdads");
-//     print(detailsList[0].length);
-//     print("asdasdads");
-//
-//     emit(SuccessfullyGetUserData());
-//   }).catchError((error) {
-//     print("Error in getData");
-//     print(error.toString());
-//     emit(ErrorGetUserData());
-//   });
-// }
+
 }

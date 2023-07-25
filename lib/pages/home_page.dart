@@ -8,6 +8,7 @@ import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/pages/admin/bills.dart';
+import 'package:lastcashir/pages/fatora.dart';
 import 'package:lastcashir/widgets/mahmoud.dart';
 
 import '../widgets/center_page.dart';

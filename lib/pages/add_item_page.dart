@@ -210,7 +210,7 @@ class _AddItemState extends State<AddItem> {
                                     minWidth: MediaQuery.of(context).size.width / 6,
                                     height: MediaQuery.of(context).size.height / 12,
                                     function: () {
-                                      if(formKey.currentState!.validate())
+                                      if(formKey.currentState!.validate() &&(foodValue==true || dessertValue==true || coldDrinkValue==true || hotDrinkValue==true))
                                       {
                                         cubit.get(context).insertItemData(
                                             label: itemNameController.text,

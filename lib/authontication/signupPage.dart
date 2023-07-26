@@ -7,6 +7,7 @@ import 'package:lastcashir/authontication/loginPage.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
+import 'package:lastcashir/pages/admin/adminhomepage.dart';
 import 'package:lastcashir/pages/admin/allusers.dart';
 
 class SignUp extends StatefulWidget {
@@ -171,7 +172,7 @@ class _SignUpState extends State<SignUp> {
 
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const AllUsers()),
+            MaterialPageRoute(builder: (context) => const AdminHomePage()),
             (route) => false);
       } else if (state is ErrorInsertUserData) {
         Fluttertoast.showToast(

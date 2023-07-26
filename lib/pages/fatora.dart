@@ -82,7 +82,7 @@ class FatoraDesign extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'Cashier name : ${cubit.get(context).billList[0][0]["name"]}',
+                  'Cashier name : ${cubit.get(context).billList[0][cubit.get(context).billList[0].length - 1]["name"].toString()}',
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

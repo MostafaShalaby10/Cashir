@@ -163,10 +163,193 @@ Widget centerPage(
                   },
                   onDoubleTap: () {
                     if (!allItem) {
-                      scaffoldKey.currentState!.showBottomSheet((context) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width / 2,
-                          height: MediaQuery.of(context).size.height / 2,
+                      // scaffoldKey.currentState!.showBottomSheet((context) {
+                      //   return Container(
+                      //     width: MediaQuery.of(context).size.width / 2,
+                      //     height: MediaQuery.of(context).size.height / 2,
+                      //     decoration: BoxDecoration(
+                      //         borderRadius: BorderRadius.circular(5),
+                      //         border: Border.all(color: Colors.black)),
+                      //     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                      //     child: Form(
+                      //       key: formKey,
+                      //       child: Padding(
+                      //         padding: const EdgeInsets.all(15.0),
+                      //         child: Column(
+                      //           crossAxisAlignment: CrossAxisAlignment.center,
+                      //           mainAxisAlignment: MainAxisAlignment.center,
+                      //           children: [
+                      //             ////////////////////////
+                      //             Row(
+                      //               children: [
+                      //                 const Text(
+                      //                   "Name : ",
+                      //                   style: TextStyle(
+                      //                     color: Colors.green,
+                      //                     fontSize: 17,
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(
+                      //                   width: 10,
+                      //                 ),
+                      //                 Text(
+                      //                   list[index]['label'],
+                      //                   style: const TextStyle(
+                      //                     color: Colors.green,
+                      //                     fontSize: 17,
+                      //                   ),
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //             const SizedBox(
+                      //               height: 10,
+                      //             ),
+                      //             Row(
+                      //               children: [
+                      //                 const Text(
+                      //                   "Quantity : ",
+                      //                   style: TextStyle(
+                      //                     color: Colors.green,
+                      //                     fontSize: 17,
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(
+                      //                   width: 10,
+                      //                 ),
+                      //                 Expanded(
+                      //                   child: textField(context,
+                      //                       text: "Enter quantity",
+                      //                       prefixIcon: Icons.numbers,
+                      //                       controller: controller,
+                      //                       type: TextInputType.number,
+                      //                       suffixIcon: Icons.cancel,
+                      //                       function: () {
+                      //                     controller.clear();
+                      //                   }),
+                      //                 )
+                      //               ],
+                      //             ),
+                      //             const SizedBox(
+                      //               height: 10,
+                      //             ),
+                      //             Row(
+                      //               children: [
+                      //                 const Text(
+                      //                   "price : ",
+                      //                   style: TextStyle(
+                      //                     color: Colors.green,
+                      //                     fontSize: 17,
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(
+                      //                   width: 10,
+                      //                 ),
+                      //                 Text(
+                      //                   " ${list[index]["price"]}",
+                      //                   style: const TextStyle(
+                      //                     color: Colors.green,
+                      //                     fontSize: 17,
+                      //                   ),
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //             SizedBox(
+                      //               width: double.infinity,
+                      //               child: Column(
+                      //                 crossAxisAlignment:
+                      //                     CrossAxisAlignment.center,
+                      //                 children: [
+                      //                   Row(
+                      //                     children: [
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '1'),
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '2'),
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '3'),
+                      //                     ],
+                      //                   ),
+                      //                   const SizedBox(
+                      //                     height: 5,
+                      //                   ),
+                      //                   Row(
+                      //                     children: [
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '4'),
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '5'),
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '6'),
+                      //                     ],
+                      //                   ),
+                      //                   const SizedBox(
+                      //                     height: 5,
+                      //                   ),
+                      //                   Row(
+                      //                     children: [
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '7'),
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '8'),
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '9'),
+                      //                     ],
+                      //                   ),
+                      //                   const SizedBox(
+                      //                     height: 5,
+                      //                   ),
+                      //                   Row(
+                      //                     mainAxisAlignment:
+                      //                         MainAxisAlignment.center,
+                      //                     children: [
+                      //                       calculatorNumber(context,
+                      //                           controller: controller,
+                      //                           number: '0'),
+                      //                     ],
+                      //                   ),
+                      //                   const SizedBox(
+                      //                     height: 30,
+                      //                   ),
+                      //                   button(
+                      //                       context: context,
+                      //                       text: "Order",
+                      //                       color: HexColor("#549AAB"),
+                      //                       minWidth: 50,
+                      //                       height: 50,
+                      //                       function: () {
+                      //                         if (formKey.currentState!
+                      //                             .validate()) {
+                      //                           cubit
+                      //                               .get(context)
+                      //                               .addBill(list: [
+                      //                             list[index]["label"],
+                      //                             int.parse(controller.text),
+                      //                             (int.parse(controller.text) *
+                      //                                 list[index]["price"])
+                      //                           ]);
+                      //                           Navigator.pop(context);
+                      //                         }
+                      //                       })
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   );
+                      // });
+                        showModalBottomSheet(context: context, builder: (context)=>Container(
+
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
                               border: Border.all(color: Colors.black)),
@@ -176,7 +359,6 @@ Widget centerPage(
                             child: Padding(
                               padding: const EdgeInsets.all(15.0),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ////////////////////////
@@ -224,8 +406,8 @@ Widget centerPage(
                                             type: TextInputType.number,
                                             suffixIcon: Icons.cancel,
                                             function: () {
-                                          controller.clear();
-                                        }),
+                                              controller.clear();
+                                            }),
                                       )
                                     ],
                                   ),
@@ -257,7 +439,7 @@ Widget centerPage(
                                     width: double.infinity,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                                      CrossAxisAlignment.center,
                                       children: [
                                         Row(
                                           children: [
@@ -309,7 +491,7 @@ Widget centerPage(
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             calculatorNumber(context,
                                                 controller: controller,
@@ -346,8 +528,7 @@ Widget centerPage(
                               ),
                             ),
                           ),
-                        );
-                      });
+                        ));
                     }
                   },
                   child: Padding(

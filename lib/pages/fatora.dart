@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +7,11 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
-
+import 'package:printing/printing.dart';
+// import 'package:printing/printing.dart';
+// import 'package:pdf/pdf.dart';
+// import 'package:pdf/widgets.dart' as pw;
+// import 'package:printing/printing.dart';
 import 'home_page.dart';
 
 class FatoraDesign extends StatelessWidget {
@@ -140,12 +146,23 @@ class FatoraDesign extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Text (
+                      Text(
                         '${cubit.get(context).billList[0][cubit.get(context).billList[0].length - 1]["total"].toString()}',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25),
                       ),
                       Spacer(),
-                      button(context: context, text: "Print", color: HexColor('#549AAB'), minWidth: MediaQuery.of(context).size.width/8, height:  MediaQuery.of(context).size.height/10, function: (){})
+                      button(
+                          context: context,
+                          text: "Print",
+                          color: HexColor('#549AAB'),
+                          minWidth: MediaQuery.of(context).size.width / 8,
+                          height: MediaQuery.of(context).size.height / 10,
+                          function: () {
+                            PdfPreview(
+                              build: (format) => cubit.get(context).generatePdf(format, "Hello"),
+                            );
+                          })
                     ],
                   ),
                 ),
@@ -156,4 +173,80 @@ class FatoraDesign extends StatelessWidget {
       ),
     );
   }
+  // Future<Uint8List> _generatePdf(PdfPageFormat format, String title) async {
+  //   final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+  //   final font = await PdfGoogleFonts.nunitoExtraLight();
+  //
+  //   pdf.addPage(
+  //     pw.Page(
+  //       pageFormat: format,
+  //       build: (context) {
+  //         return pw.Column(
+  //           children: [
+  //             pw.Text('8:10',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+  //
+  //             pw.Text('27/7/2023',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+  //
+  //             pw.SizedBox(height: 20),
+  //
+  //             pw.Row(
+  //
+  //               children: [
+  //                 pw.Text('number of fatora:  15')
+  //               ],
+  //             ),
+  //             pw.Row(
+  //               children: [
+  //                 pw.Text('cashir name: mahmoud')
+  //               ],
+  //             ),
+  //
+  //             pw.SizedBox(height: 20),
+  //
+  //             pw.Row(
+  //               children:[
+  //                 pw.Expanded(
+  //                   child: pw.Text('Id'),
+  //                 ),
+  //                 pw.Expanded(
+  //                   child: pw.Text('name'),
+  //                 ),
+  //                 pw.Expanded(
+  //                   child: pw.Text('quantity'),
+  //                 ),
+  //                 pw.Expanded(
+  //                   child: pw.Text('price'),
+  //                 ),
+  //               ],
+  //             ),
+  //
+  //             pw.SizedBox(height: 40),
+  //
+  //             pw.Row(
+  //               children:[
+  //                 pw.Expanded(
+  //                   child: pw.Text('1'),
+  //                 ),
+  //                 pw.Expanded(
+  //                   child: pw.Text('pepsi'),
+  //                 ),
+  //                 pw.Expanded(
+  //                   child: pw.Text('10'),
+  //                 ),
+  //                 pw.Expanded(
+  //                   child: pw.Text('100'),
+  //                 ),
+  //               ],
+  //             ),
+  //
+  //             pw.SizedBox(height: 20),
+  //             pw.Text('Total : 100',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  //
+  //   return pdf.save();
+  // }
 }

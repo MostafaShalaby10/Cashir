@@ -43,9 +43,11 @@ dependencies:
   sqflite_common_ffi:
   fluttertoast: ^8.0.9
   intl: ^0.17.0
+  printing: ^5.6.0
   conditional_builder_null_safety: ^0.0.6
-
-  gsheets: ^0.4.2
+  desktop_window: ^0.4.0
+  window_manager: ^0.3.5
+#  printing: ^5.10.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:bloc/bloc.dart';
+import 'package:pdf/pdf.dart' as pdf;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -413,5 +417,80 @@ void getDetailsData({required int id}){
     emit(ErrorGetDetailsData());
   });
 }
+  Future<Uint8List> generatePdf(pdf.PdfPageFormat format, String title) async {
+    final p = pw.Document(version: pdf.PdfVersion.pdf_1_5, compress: true);
+    final font = await PdfGoogleFonts.nunitoExtraLight();
 
+    p.addPage(
+      pw.Page(
+        pageFormat: format,
+        build: (context) {
+          return pw.Column(
+            children: [
+              pw.Text('8:10',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+
+              pw.Text('27/7/2023',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+
+              pw.SizedBox(height: 20),
+
+              pw.Row(
+
+                children: [
+                  pw.Text('number of fatora:  15')
+                ],
+              ),
+              pw.Row(
+                children: [
+                  pw.Text('cashir name: mahmoud')
+                ],
+              ),
+
+              pw.SizedBox(height: 20),
+
+              pw.Row(
+                children:[
+                  pw.Expanded(
+                    child: pw.Text('Id'),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text('name'),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text('quantity'),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text('price'),
+                  ),
+                ],
+              ),
+
+              pw.SizedBox(height: 40),
+
+              pw.Row(
+                children:[
+                  pw.Expanded(
+                    child: pw.Text('1'),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text('pepsi'),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text('10'),
+                  ),
+                  pw.Expanded(
+                    child: pw.Text('100'),
+                  ),
+                ],
+              ),
+
+              pw.SizedBox(height: 20),
+              pw.Text('Total : 100',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+            ],
+          );
+        },
+      ),
+    );
+
+    return p.save();
+  }
 }

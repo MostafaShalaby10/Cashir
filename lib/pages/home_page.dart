@@ -14,13 +14,14 @@ import 'package:lastcashir/widgets/mahmoud.dart';
 import '../widgets/center_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final int? tableNum ;
+  const HomePage({Key? key,  this.tableNum}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     TextEditingController controller = TextEditingController();
     var scaffoldKey = GlobalKey<ScaffoldState>();
-
+    int? tableId = tableNum ;
     return BlocConsumer<cubit, States>(
       builder: (context, state) {
         return Scaffold(

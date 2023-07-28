@@ -65,7 +65,6 @@ class _UpdateState extends State<Update> {
             backgroundColor: HexColor('#549AAB')),
         body: Row(
           children: [
-            leftPage(context, allItems: false, users: false),
             Expanded(
               flex: 6,
               child: Padding(

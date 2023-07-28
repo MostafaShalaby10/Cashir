@@ -34,6 +34,7 @@ class cubit extends Cubit<States> {
   List<dynamic> orders = [];
   List<dynamic> food = [];
   List<dynamic> billList = [];
+  List<dynamic> billSpecific = [];
   List<dynamic> detailsList = [];
   List<dynamic> dessert = [];
   List<dynamic> coldDrinks = [];
@@ -274,6 +275,7 @@ getUserData();
       'DELETE FROM $userTable  WHERE id = ?',
       [id],
     ).then((value) {
+      print("delete successfully");
       emit(SuccessfullyDeleteUserData());
     }).catchError((error) {
       print(error.toString());
@@ -493,4 +495,7 @@ void getDetailsData({required int id}){
 
     return p.save();
   }
+
+
+
 }

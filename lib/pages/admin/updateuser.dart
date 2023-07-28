@@ -10,14 +10,13 @@ import '../../widgets/center_page.dart';
 import '../add_item_page.dart';
 import '../all_items.dart';
 
-class UpdateUser extends StatelessWidget {
+class UpdateUser extends StatefulWidget {
   final String name;
 
   final String password;
 
   final String email;
   final String id;
-
   const UpdateUser(
       {Key? key,
       required this.name,
@@ -27,19 +26,31 @@ class UpdateUser extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<UpdateUser> createState() => _UpdateUserState();
+}
+
+class _UpdateUserState extends State<UpdateUser> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  bool isPass = true ;
+
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController userPasswordController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
 
 
-    TextEditingController userNameController = TextEditingController();
-    TextEditingController userPasswordController = TextEditingController();
-    TextEditingController userEmailController = TextEditingController();
 
 
 
     return BlocConsumer<cubit, States>(builder: (context, state) {
-      userPasswordController.text = password;
-      userEmailController.text = email;
-      userNameController.text = name;
+      userPasswordController.text = widget.password;
+      userEmailController.text = widget.email;
+      userNameController.text = widget.name;
       return Scaffold(
         appBar: AppBar(
             automaticallyImplyLeading: false,
@@ -47,7 +58,7 @@ class UpdateUser extends StatelessWidget {
               onPressed: () {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const AllItems()),
+                    MaterialPageRoute(builder: (context) => const AllUsers()),
                     (route) => false);
               },
               icon: const Icon(Icons.arrow_back_ios_new),
@@ -57,9 +68,8 @@ class UpdateUser extends StatelessWidget {
             backgroundColor: HexColor('#549AAB')),
         body: Row(
           children: [
-            leftPage(context, allItems: false, users: false),
             Expanded(
-              flex: 6,
+
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Container(
@@ -121,7 +131,15 @@ class UpdateUser extends StatelessWidget {
                             prefixIcon: Icons.add,
                             controller: userPasswordController,
                             type: TextInputType.number,
-                            raduis: 10),
+                            raduis: 10 ,
+                            isPass: isPass,
+                            suffixIcon:isPass?Icons.visibility:Icons.visibility_off ,
+                          function: (){
+                          setState(() {
+                            isPass = !isPass ;
+                          });
+                          }
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -134,7 +152,7 @@ class UpdateUser extends StatelessWidget {
                               height: MediaQuery.of(context).size.height / 12,
                               function: () {
                                 cubit.get(context).updateUserData(
-                                    id: int.parse(id),
+                                    id: int.parse(widget.id),
                                     email: userEmailController.text,
                                     name: userNameController.text,
                                     password: userPasswordController.text);

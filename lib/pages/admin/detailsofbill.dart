@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/pages/admin/bills.dart';
 
+import '../../components/constants.dart';
 import '../../cubits/cubit.dart';
 import '../../cubits/states.dart';
 
@@ -29,7 +30,7 @@ class Details extends StatelessWidget {
                 icon: Icon(Icons.arrow_back_ios_new),
               ),
               title: Text("Bills"),
-              backgroundColor: HexColor('#549AAB'),
+              backgroundColor:primaryColor,
             ),
             body: Padding(
               padding: const EdgeInsets.all(15.0),

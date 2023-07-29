@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/pages/home_page.dart';
 
@@ -25,7 +26,7 @@ class Tables extends StatelessWidget {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => HomePage(tableNum: index,)));
                 },
-                color: Colors.red,
+                color: primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

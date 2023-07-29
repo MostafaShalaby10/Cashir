@@ -8,6 +8,8 @@ import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/widgets/center_page.dart';
 
+import '../components/constants.dart';
+
 class Mahmoud extends StatelessWidget {
   const Mahmoud({Key? key}) : super(key: key);
 
@@ -23,7 +25,7 @@ class Mahmoud extends StatelessWidget {
             key: scaffoldKey,
             appBar: AppBar(
               title: const Text("Search"),
-              backgroundColor: HexColor('#549AAB'),
+              backgroundColor: primaryColor,
             ),
             body: SizedBox(
               width: double.infinity,
@@ -67,7 +69,7 @@ class Mahmoud extends StatelessWidget {
                     SizedBox(
                       height: 30,
                     ),
-                   centerPage(context, allItem: false, scaffoldKey: scaffoldKey, list: list, users: false),
+                   centerPage(context, allItem: false, list: list, users: false),
                   ],
                 ),
               ),

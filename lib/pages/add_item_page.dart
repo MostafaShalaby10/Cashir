@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/pages/all_items.dart';
@@ -55,7 +56,7 @@ class _AddItemState extends State<AddItem> {
             ),
             elevation: 0,
             title: const Text("Add Item"),
-            backgroundColor: HexColor('#549AAB')),
+            backgroundColor: primaryColor),
         body: Row(
           children: [
             leftPage(context, allItems: false , users: false),
@@ -206,7 +207,7 @@ class _AddItemState extends State<AddItem> {
                                 builder: (context)=> button(
                                     context: context,
                                     text: "ADD item",
-                                    color: HexColor("#123740"),
+                                    color: primaryColor,
                                     minWidth: MediaQuery.of(context).size.width / 6,
                                     height: MediaQuery.of(context).size.height / 12,
                                     function: () {

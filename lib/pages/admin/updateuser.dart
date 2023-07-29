@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/pages/admin/allusers.dart';
 
 import '../../components/custom_button.dart';
@@ -65,7 +66,7 @@ class _UpdateUserState extends State<UpdateUser> {
             ),
             elevation: 0,
             title: const Text("Update Page"),
-            backgroundColor: HexColor('#549AAB')),
+            backgroundColor: primaryColor),
         body: Row(
           children: [
             Expanded(
@@ -147,7 +148,7 @@ class _UpdateUserState extends State<UpdateUser> {
                           child: button(
                               context: context,
                               text: "Update user",
-                              color: HexColor("#123740"),
+                              color: primaryColor,
                               minWidth: MediaQuery.of(context).size.width / 6,
                               height: MediaQuery.of(context).size.height / 12,
                               function: () {

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/authontication/loginPage.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
@@ -29,7 +30,7 @@ class HomePage extends StatelessWidget {
           appBar: AppBar(
             elevation: 0,
             title: Text("Simple Cafe"),
-            backgroundColor: HexColor('#549AAB'),
+            backgroundColor: primaryColor,
             actions: [
               IconButton(
                   onPressed: () {
@@ -51,14 +52,13 @@ class HomePage extends StatelessWidget {
             ],
           ),
           body: ConditionalBuilder(
-              condition: state is! LoadingGetItemData,
+              condition: state is! LoadingGetItemData || state is! LoadingChangeList,
               builder: (context) => Row(
                     children: [
-                      leftPage(context, allItems: false, users: false),
+                      leftPage(context, allItems: false, users: false , ),
                       centerPage(context,
                           allItem: false,
-                          scaffoldKey: scaffoldKey,
-                          list: cubit.get(context).orders,
+                          list: cubit.get(context).list,
                           users: false),
                       rightPage(context),
                     ],

@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:lastcashir/components/constants.dart';
+import 'package:lastcashir/widgets/center_page.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:bloc/bloc.dart';
@@ -11,18 +13,29 @@ import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/main.dart';
 import 'package:sqflite/sqflite.dart';
 
+
+
+
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lastcashir/components/constants.dart';
+import 'package:lastcashir/cubits/cubit.dart';
+import 'package:lastcashir/cubits/states.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+
+
+
 class cubit extends Cubit<States> {
   cubit() : super(InitialState());
 
   static cubit get(context) => BlocProvider.of(context);
   Color? color;
 
-  List<String> items = [
-    "Food",
-    "Cold Drinks",
-    "Hot Drinks",
-    "Deserts"
-  ];
+  List<String> items = ["All items","Food", "Cold Drinks", "Hot Drinks", "Deserts"];
   List<IconData> icons = [
     Icons.category,
     Icons.fastfood_outlined,
@@ -41,6 +54,7 @@ class cubit extends Cubit<States> {
   List<dynamic> hotDrinks = [];
   List<dynamic> searchById = [];
   List<dynamic> searchByName = [];
+  List<dynamic> list = [];
 
   double total = 0;
 
@@ -115,8 +129,7 @@ class cubit extends Cubit<States> {
       });
     }, onOpen: (database) {
       print("database opend successfully");
-
-        }).then((value) {
+    }).then((value) {
       db = value;
       getItemData();
       emit(SuccessfullyCreateDataBase());
@@ -168,11 +181,11 @@ class cubit extends Cubit<States> {
   }
 
   void getUserData() {
-    users=[];
+    users = [];
     emit(LoadingGetUserData());
     db?.rawQuery("SELECT * FROM $userTable").then((value) {
-       users.add(value);
-       print(users);
+      users.add(value);
+      print(users);
       emit(SuccessfullyGetUserData());
     }).catchError((error) {
       print("Error in getData");
@@ -203,6 +216,7 @@ class cubit extends Cubit<States> {
         }
       });
       print(orders);
+      list = orders;
     }).catchError((error) {
       print("Error in getData");
       print(error.toString());
@@ -242,8 +256,8 @@ class cubit extends Cubit<States> {
       'UPDATE $userTable SET name = ? , email = ? , password=? WHERE id = ?',
       ['$name', '$email', '$password', id],
     ).then((value) {
-print("update");
-getUserData();
+      print("update");
+      getUserData();
       emit(SuccessfullyUpdateUserData());
     }).catchError((error) {
       print(error.toString());
@@ -346,11 +360,11 @@ getUserData();
           createDetails(
               id: value,
               item: bill[i][0],
-              quantity:bill[i][1],
+              quantity: bill[i][1],
               price: bill[i][2]);
         }
         getBillData();
-        getDetailsData(id: value) ;
+        getDetailsData(id: value);
 
         print("create bill success");
         clearBill();
@@ -391,12 +405,12 @@ getUserData();
     emit(LoadingGetBillData());
     print("dsajisadjisad");
     db?.rawQuery("SELECT * FROM $billTable").then((value) {
-print(value[value.length-1]);
+      print(value[value.length - 1]);
       billList.add(value);
       // print(billList);
       // print(billList.length);
-      print(billList[0][billList[0].length-1]);
-      print(billList.length-1);
+      print(billList[0][billList[0].length - 1]);
+      print(billList.length - 1);
       // getDetailsData();
       // showData();
       emit(SuccessfullyGetBillData());
@@ -406,96 +420,159 @@ print(value[value.length-1]);
     });
   }
 
-void getDetailsData({required int id}){
+  void getDetailsData({required int id}) {
     detailsList = [];
-  emit(LoadingGetDetailsData());
-  db?.rawQuery("SELECT * FROM $detailsTable WHERE details_id = ?" , [id]).then((value) {
-    print("details table : $value");
-    detailsList.add(value);
-    emit(SuccessfullyGetDetailsData());
-  }).catchError((error) {
-    print("Error in getData Details");
-    print(error.toString());
-    emit(ErrorGetDetailsData());
-  });
-}
-  Future<Uint8List> generatePdf(pdf.PdfPageFormat format, String title) async {
-    final p = pw.Document(version: pdf.PdfVersion.pdf_1_5, compress: true);
+    emit(LoadingGetDetailsData());
+    db?.rawQuery("SELECT * FROM $detailsTable WHERE details_id = ?", [id]).then(
+        (value) {
+      print("details table : $value");
+      detailsList.add(value);
+      emit(SuccessfullyGetDetailsData());
+    }).catchError((error) {
+      print("Error in getData Details");
+      print(error.toString());
+      emit(ErrorGetDetailsData());
+    });
+  }
+
+
+  void changeList({required List<dynamic> testlist}) {
+    emit(LoadingChangeList());
+    print(testlist);
+    list = testlist;
+    emit(SuccessfullyChangeList());
+  }
+
+  Future<Uint8List> generatePdf( PdfPageFormat format, String title) async {
+    final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
     final font = await PdfGoogleFonts.nunitoExtraLight();
 
-    p.addPage(
+    pdf.addPage(
       pw.Page(
+
         pageFormat: format,
         build: (context) {
-          return pw.Column(
-            children: [
-              pw.Text('8:10',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+          return pw.Container(
+            width: double.infinity,
+            child: pw.Column(
 
-              pw.Text('27/7/2023',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
+              crossAxisAlignment: pw.CrossAxisAlignment.center,
+              children: [
+                pw.Text(
+                  'Name of Cafe',
+                  style: pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold, fontSize: 50),
 
-              pw.SizedBox(height: 20),
+                ),
+                pw.SizedBox(height: 8,),
+                pw.Text(
+                  '${billList[0][billList[0].length - 1]["date"].toString()}',
+                  style: pw.TextStyle(
+                      fontSize: 20),
 
-              pw.Row(
+                ),
 
-                children: [
-                  pw.Text('number of fatora:  15')
-                ],
-              ),
-              pw.Row(
-                children: [
-                  pw.Text('cashir name: mahmoud')
-                ],
-              ),
+                pw.SizedBox(height: 16,),
+                pw.Padding(
+                  padding: pw.EdgeInsets.all(10.0),
+                  child: pw.Row(
+                    children: [
+                      pw.Text(
+                        'Number of Receipt : ${detailsList[0][0]['details_id'].toString()}',
+                        style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold, fontSize: 20),
 
-              pw.SizedBox(height: 20),
+                      ),
 
-              pw.Row(
-                children:[
-                  pw.Expanded(
-                    child: pw.Text('Id'),
+
+                    ],
                   ),
-                  pw.Expanded(
-                    child: pw.Text('name'),
-                  ),
-                  pw.Expanded(
-                    child: pw.Text('quantity'),
-                  ),
-                  pw.Expanded(
-                    child: pw.Text('price'),
-                  ),
-                ],
-              ),
+                ),
+                pw.Padding(
+                  padding: pw.EdgeInsets.all(10.0),
+                  child: pw.Row(
+                    children: [
+                      pw.Text(
+                        'Cashier name : ${billList[0][billList[0].length - 1]["name"].toString()}',
+                        style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold, fontSize: 20),
 
-              pw.SizedBox(height: 40),
+                      ),
 
-              pw.Row(
-                children:[
-                  pw.Expanded(
-                    child: pw.Text('1'),
-                  ),
-                  pw.Expanded(
-                    child: pw.Text('pepsi'),
-                  ),
-                  pw.Expanded(
-                    child: pw.Text('10'),
-                  ),
-                  pw.Expanded(
-                    child: pw.Text('100'),
-                  ),
-                ],
-              ),
 
-              pw.SizedBox(height: 20),
-              pw.Text('Total : 100',style:pw.TextStyle(fontSize: 20,fontWeight: pw.FontWeight.bold)),
-            ],
+                    ],
+                  ),
+                ),
+
+                pw.Padding(
+                  padding: pw.EdgeInsets.symmetric(
+                      vertical: 20, horizontal: 40),
+                  child: pw.Row(
+                    children: [
+                      pw.Expanded(child: pw.Text('Name')),
+                      pw.Expanded(child: pw.Text('Qantity')),
+                      pw.Expanded(child: pw.Text('Price')),
+                    ],
+                  ),
+                ),
+
+                pw.Expanded(
+                  child: pw.ListView.separated(
+                      itemBuilder: (context, index) =>
+                          pw.Padding(
+                            padding:
+                            pw.EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 40),
+                            child: pw.Row(
+                              children: [
+                                pw.Expanded(
+                                    child: pw.Text(
+                                        '${detailsList[0][index]["item"]}')),
+                                pw.Expanded(
+                                    child: pw.Text(
+                                        '${detailsList[0][index]["quantity"]
+                                            .toString()}')),
+                                pw.Expanded(
+                                    child: pw.Text(
+                                        '${detailsList[0][index]["price"]}')),
+                              ],
+                            ),
+                          ),
+                      separatorBuilder: (context, index) =>
+                          pw.Container(
+                            height: 1,
+                          ),
+                      itemCount: detailsList[0].length),
+                ),
+
+
+                pw.Padding(
+                  padding: pw.EdgeInsets.symmetric(
+                      horizontal: 40, vertical: 20),
+                  child: pw.Row(
+                    children: [
+                      pw.Text('Total:', style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold, fontSize: 25),),
+                      pw.SizedBox(width: 10,),
+                      pw.Text('${billList[0][billList[0].length - 1]["total"].toString()}',
+                        style: pw.TextStyle(fontWeight: pw.FontWeight.bold,
+                            fontSize: 25),),
+                    ],
+                  ),
+                ),
+
+
+
+              ]
+              ,
+            )
+            ,
           );
         },
       ),
     );
 
-    return p.save();
+    return pdf.save();
   }
-
-
 
 }

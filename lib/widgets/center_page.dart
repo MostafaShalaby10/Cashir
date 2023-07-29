@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
@@ -7,19 +8,27 @@ import 'package:lastcashir/main.dart';
 import 'package:lastcashir/pages/add_item_page.dart';
 import 'package:lastcashir/pages/admin/updateuser.dart';
 import 'package:lastcashir/pages/fatora.dart';
+import 'package:lastcashir/pages/home_page.dart';
 import 'package:lastcashir/pages/update_page.dart';
 
+import '../components/constants.dart';
 import '../components/custom_button.dart';
 import '../pages/all_items.dart';
-import '../pages/cold_drink_page.dart';
-import '../pages/desert_page.dart';
-import '../pages/food_page.dart';
-import '../pages/hot_drink_page.dart';
+
+import 'dart:typed_data';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lastcashir/components/constants.dart';
+import 'package:lastcashir/cubits/cubit.dart';
+import 'package:lastcashir/cubits/states.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 Widget centerPage(
   context, {
   required bool allItem,
-  required GlobalKey<ScaffoldState> scaffoldKey,
   required List<dynamic> list,
   required bool users,
 }) {
@@ -35,7 +44,7 @@ Widget centerPage(
             padding: const EdgeInsets.all(20.0),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              color: HexColor('#123740'),
+              color: primaryColor,
               child: Row(
                 children: [
                   Expanded(child: text(text: 'ID', color: Colors.white)),
@@ -302,7 +311,7 @@ Widget centerPage(
                                       button(
                                           context: context,
                                           text: "Order",
-                                          color: HexColor("#549AAB"),
+                                          color: primaryColor,
                                           minWidth: 50,
                                           height: 50,
                                           function: () {
@@ -468,31 +477,31 @@ Widget leftPage(context, {required bool allItems, required bool users}) {
     return Expanded(
       flex: 1,
       child: Container(
-        color: HexColor('#549AAB'),
+        color: primaryColor,
         child: Padding(
           padding: const EdgeInsets.only(top: 30, left: 20),
           child: ListView.separated(
             itemBuilder: (context, index) => InkWell(
               onTap: () {
                 if (index == 0) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const FoodPage();
-                  }));
+
+                  cubit.get(context).changeList( testlist: cubit.get(context).orders);
                 }
                 if (index == 1) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const ColdDrink();
-                  }));
+
+                  cubit.get(context).changeList( testlist: cubit.get(context).food);
                 }
                 if (index == 2) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const HotDrink();
-                  }));
+                  cubit.get(context).changeList( testlist: cubit.get(context).coldDrinks);
+
                 }
                 if (index == 3) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return const Desertpage();
-                  }));
+                  cubit.get(context).changeList( testlist: cubit.get(context).hotDrinks);
+
+                }
+                if (index == 4) {
+                  cubit.get(context).changeList( testlist: cubit.get(context).dessert);
+
                 }
               },
               child: Row(
@@ -524,7 +533,7 @@ Widget leftPage(context, {required bool allItems, required bool users}) {
     return Expanded(
       flex: 1,
       child: Container(
-        color: HexColor('#549AAB'),
+        color: primaryColor,
         child: Padding(
           padding: const EdgeInsets.only(top: 30, left: 20),
           child: InkWell(
@@ -555,7 +564,7 @@ Widget leftPage(context, {required bool allItems, required bool users}) {
   return Expanded(
     flex: 1,
     child: Container(
-      color: HexColor('#549AAB'),
+      color: primaryColor,
       child: Padding(
         padding: const EdgeInsets.only(top: 30, left: 20),
         child: InkWell(
@@ -719,7 +728,7 @@ Widget rightPage(context) {
                 child: button(
                     context: context,
                     text: "Pay",
-                    color: HexColor('#549AAB'),
+                    color: primaryColor,
                     minWidth: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height / 12,
                     function: () {
@@ -744,4 +753,159 @@ Widget rightPage(context) {
           ),
         )),
   );
+}
+
+
+Future<Uint8List> generatePdf( PdfPageFormat format, String title) async {
+  final pdf = pw.Document(version: PdfVersion.pdf_1_5, compress: true);
+  final font = await PdfGoogleFonts.nunitoExtraLight();
+
+  pdf.addPage(
+    pw.Page(
+      pageFormat: format,
+
+      build: (context) {
+        return pw.Container(
+          width: double.infinity,
+          child: pw.Column(
+
+            crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+              pw.Text(
+                'Name of Cafe',
+                style: pw.TextStyle(
+                    fontWeight: pw.FontWeight.bold, fontSize: 50),
+
+              ),
+              pw.SizedBox(height: 8,),
+              pw.Text(
+                '${cubit
+                    .get(context)
+                    .billList[0][cubit
+                    .get(context)
+                    .billList[0].length - 1]["date"].toString()}',
+                style: pw.TextStyle(
+                    fontSize: 20),
+
+              ),
+
+              pw.SizedBox(height: 16,),
+              pw.Padding(
+                padding: pw.EdgeInsets.all(10.0),
+                child: pw.Row(
+                  children: [
+                    pw.Text(
+                      'Number of Receipt : ${cubit
+                          .get(context)
+                          .detailsList[0][0]['details_id'].toString()}',
+                      style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold, fontSize: 20),
+
+                    ),
+
+
+                  ],
+                ),
+              ),
+              pw.Padding(
+                padding: pw.EdgeInsets.all(10.0),
+                child: pw.Row(
+                  children: [
+                    pw.Text(
+                      'Cashier name : ${cubit
+                          .get(context)
+                          .billList[0][cubit
+                          .get(context)
+                          .billList[0].length - 1]["name"].toString()}',
+                      style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold, fontSize: 20),
+
+                    ),
+
+
+                  ],
+                ),
+              ),
+
+              pw.Padding(
+                padding: pw.EdgeInsets.symmetric(
+                    vertical: 20, horizontal: 40),
+                child: pw.Row(
+                  children: [
+                    pw.Expanded(child: pw.Text('Id')),
+                    pw.Expanded(child: pw.Text('Name')),
+                    pw.Expanded(child: pw.Text('Qantity')),
+                    pw.Expanded(child: pw.Text('Price')),
+                  ],
+                ),
+              ),
+
+              pw.Expanded(
+                child: pw.ListView.separated(
+                    itemBuilder: (context, index) =>
+                        pw.Padding(
+                          padding:
+                          pw.EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 40),
+                          child: pw.Row(
+                            children: [
+                              pw.Expanded(
+                                  child: pw.Text(
+                                      '${cubit
+                                          .get(context)
+                                          .detailsList[0][index]["item"]}')),
+                              pw.Expanded(
+                                  child: pw.Text(
+                                      '${cubit
+                                          .get(context)
+                                          .detailsList[0][index]["quantity"]
+                                          .toString()}')),
+                              pw.Expanded(
+                                  child: pw.Text(
+                                      '${cubit
+                                          .get(context)
+                                          .detailsList[0][index]["price"]}')),
+                            ],
+                          ),
+                        ),
+                    separatorBuilder: (context, index) =>
+                        pw.Container(
+                          height: 1,
+                        ),
+                    itemCount: cubit
+                        .get(context)
+                        .detailsList[0].length),
+              ),
+
+
+              pw.Padding(
+                padding: pw.EdgeInsets.symmetric(
+                    horizontal: 40, vertical: 20),
+                child: pw.Row(
+                  children: [
+                    pw.Text('Total:', style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold, fontSize: 25),),
+                    pw.SizedBox(width: 10,),
+                    pw.Text('${cubit
+                        .get(context)
+                        .billList[0][cubit
+                        .get(context)
+                        .billList[0].length - 1]["total"].toString()}',
+                      style: pw.TextStyle(fontWeight: pw.FontWeight.bold,
+                          fontSize: 25),),
+                  ],
+                ),
+              ),
+
+
+            ]
+            ,
+          )
+          ,
+        );
+      },
+    ),
+  );
+
+  return pdf.save();
 }

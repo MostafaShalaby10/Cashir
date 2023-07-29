@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:lastcashir/authontication/loginPage.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
@@ -48,7 +49,7 @@ class _SignUpState extends State<SignUp> {
           ),
           elevation: 0,
           title: const Text("Add user"),
-          backgroundColor: HexColor('#549AAB'),
+          backgroundColor: primaryColor,
         ),
         backgroundColor: Colors.grey[300],
         body: SafeArea(
@@ -127,7 +128,7 @@ class _SignUpState extends State<SignUp> {
                           builder: (context) => button(
                               context: context,
                               text: "Signup",
-                              color: HexColor('#549AAB'),
+                              color: primaryColor,
                               minWidth: MediaQuery.of(context).size.width / 2,
                               height: MediaQuery.of(context).size.height / 12,
                               function: () {

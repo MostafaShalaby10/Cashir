@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/pages/admin/adminhomepage.dart';
 
 import '../components/custom_button.dart';
@@ -33,13 +34,13 @@ class AllItems extends StatelessWidget {
               ),
               elevation: 0,
               title: Text("All Items Ubdate And Delete"),
-              backgroundColor: HexColor('#549AAB')),
+              backgroundColor: primaryColor),
           body: Row(
             children: [
               leftPage(context, allItems: true, users: false),
               centerPage(context,
                   allItem: true,
-                  scaffoldKey: scaffoldKey,
+
                   list: cubit.get(context).orders, users: false),
             ],
           ),

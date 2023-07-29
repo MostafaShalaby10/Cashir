@@ -8,7 +8,6 @@ import 'package:lastcashir/pages/admin/adminhomepage.dart';
 import 'package:lastcashir/pages/admin/allusers.dart';
 import 'package:lastcashir/pages/admin/updateuser.dart';
 import 'package:lastcashir/pages/all_items.dart';
-import 'package:lastcashir/pages/cold_drink_page.dart';
 import 'package:lastcashir/pages/tables.dart';
 import 'package:lastcashir/widgets/mahmoud.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -46,7 +45,6 @@ Future main() async {
 
 }
 
-String? name;
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -60,7 +58,7 @@ class MyApp extends StatelessWidget {
           builder: (context, state) {
             return const MaterialApp(
               debugShowCheckedModeBanner: false,
-              home: Login(),
+              home: AdminHomePage(),
             );
           },
           listener: (context, state) {}),

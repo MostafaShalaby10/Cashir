@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/pages/all_items.dart';
@@ -62,7 +63,7 @@ class _UpdateState extends State<Update> {
             ),
             elevation: 0,
             title: const Text("Update Page"),
-            backgroundColor: HexColor('#549AAB')),
+            backgroundColor:primaryColor),
         body: Row(
           children: [
             Expanded(
@@ -205,7 +206,7 @@ class _UpdateState extends State<Update> {
                           child: button(
                               context: context,
                               text: "Update item",
-                              color: HexColor("#123740"),
+                              color: primaryColor,
                               minWidth: MediaQuery.of(context).size.width / 6,
                               height: MediaQuery.of(context).size.height / 12,
                               function: () {

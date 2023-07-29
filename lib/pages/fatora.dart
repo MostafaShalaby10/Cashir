@@ -4,9 +4,11 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/components/custom_button.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
+import 'package:lastcashir/test.dart';
 import 'package:printing/printing.dart';
 // import 'package:printing/printing.dart';
 // import 'package:pdf/pdf.dart';
@@ -37,7 +39,7 @@ class FatoraDesign extends StatelessWidget {
                 ),
                 elevation: 0,
                 title: Text("Fatora"),
-                backgroundColor: HexColor('#549AAB'),
+                backgroundColor: primaryColor,
               ),
               body: ConditionalBuilder(
                   condition: state is SuccessfullyGetDetailsData,
@@ -155,13 +157,11 @@ class FatoraDesign extends StatelessWidget {
                       button(
                           context: context,
                           text: "Print",
-                          color: HexColor('#549AAB'),
+                          color: primaryColor,
                           minWidth: MediaQuery.of(context).size.width / 8,
                           height: MediaQuery.of(context).size.height / 10,
                           function: () {
-                            PdfPreview(
-                              build: (format) => cubit.get(context).generatePdf(format, "Hello"),
-                            );
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>test("Mostafa")));
                           })
                     ],
                   ),

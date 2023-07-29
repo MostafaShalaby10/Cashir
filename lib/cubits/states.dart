@@ -68,3 +68,6 @@ class ErrorGetBillData extends States{}
 class LoadingGetDetailsData extends States{}
 class SuccessfullyGetDetailsData extends States{}
 class ErrorGetDetailsData extends States{}
+
+class LoadingChangeList extends States{}
+class SuccessfullyChangeList extends States{}

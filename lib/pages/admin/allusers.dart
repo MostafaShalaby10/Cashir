@@ -2,6 +2,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:lastcashir/components/constants.dart';
 import 'package:lastcashir/cubits/cubit.dart';
 import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/pages/admin/adminhomepage.dart';
@@ -31,7 +32,7 @@ class AllUsers extends StatelessWidget {
                 ),
                 elevation: 0,
                 title: const Text("Users Page"),
-                backgroundColor: HexColor('#549AAB')),
+                backgroundColor: primaryColor),
             body: ConditionalBuilder(
                 condition: state is! LoadingGetUserData,
                 builder: (context) => Row(
@@ -39,7 +40,7 @@ class AllUsers extends StatelessWidget {
                         leftPage(context, allItems: true, users: true),
                         centerPage(context,
                             allItem: true,
-                            scaffoldKey: scaffoldKey,
+                            
                             list: cubit.get(context).users,
                             users: true),
                       ],

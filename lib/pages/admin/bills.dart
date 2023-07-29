@@ -7,6 +7,7 @@ import 'package:lastcashir/cubits/states.dart';
 import 'package:lastcashir/pages/admin/adminhomepage.dart';
 import 'package:lastcashir/pages/admin/detailsofbill.dart';
 
+import '../../components/constants.dart';
 import '../home_page.dart';
 
 class ShowBill extends StatelessWidget {
@@ -30,7 +31,7 @@ class ShowBill extends StatelessWidget {
                 icon: Icon(Icons.arrow_back_ios_new),
               ),
               title: Text("Bills"),
-              backgroundColor: HexColor('#549AAB'),
+              backgroundColor: primaryColor,
             ),
             body: Padding(
               padding: const EdgeInsets.all(15.0),
